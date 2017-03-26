@@ -71,6 +71,14 @@ public class BTree<VType> {
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
+    public BTree delete(int key) {
+        throw new UnsupportedOperationException("not yet implemented.");
+    }
+
+    public BTree search(int key, VType rid) {
+        throw new UnsupportedOperationException("not yet implemented.");
+    }
+
     public BTreeProperties getProperties() {
         return properties;
     }
