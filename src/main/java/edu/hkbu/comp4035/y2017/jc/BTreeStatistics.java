@@ -38,6 +38,18 @@ public class BTreeStatistics {
 
     @Override
     public String toString() {
-        return super.toString();
+        String msg = "";
+        msg += "Statistics of the B+-tree:";
+        msg += "    Total number of nodes: %d";
+        msg += "    Total number of data entries: %d";
+        msg += "    Total number of index entries: %d";
+        msg += "    Average fill factor of leaf nodes: %d%%";
+        msg += "    Height of tree: %d";
+        return String.format(msg,
+                getNodesCount(),
+                getDataEntriesCount(),
+                getIndexEntriesCount(),
+                getAverageFillFactor(),
+                getHeight());
     }
 }

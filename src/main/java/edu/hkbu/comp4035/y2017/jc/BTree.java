@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.deploy.util.StringUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -20,15 +21,13 @@ public class BTree<VType> {
      * If the file exists, we "open" the file and build an initial B+-tree based on the key values in the file.
      * Otherwise, we return an error message and the program terminates.
      */
-    public BTree(String pathname) {
+    public BTree(String pathname) throws IOException {
         File file = new File(pathname);
-        try {
-            String content = StringUtils.join(Files.readAllLines(file.toPath()), "");
-            importJson(content);
-        } catch (IOException e) {
-            System.out.printf("Cannot read BTree file! Due to the following reason:\r\n%s\r\n", e.getMessage());
-            e.printStackTrace();
-        }
+
+        if (!file.isFile()) throw new FileNotFoundException("404: " + pathname);
+
+        String content = StringUtils.join(Files.readAllLines(file.toPath()), "");
+        importJson(content);
     }
 
     /**
