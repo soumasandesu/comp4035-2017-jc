@@ -6,7 +6,7 @@ public class BTreeIndexNode extends BTreeNode {
     private final Vector<BTreeIndexNode> subNodes;
 
     BTreeIndexNode(BTree tree) {
-        super(tree, father);
+        super(tree);
         subNodes = new Vector<>(t());
     }
 

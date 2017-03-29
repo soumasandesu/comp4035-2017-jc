@@ -53,6 +53,10 @@ public abstract class BTreeNode implements Serializable {
         return father;
     }
 
+    protected void father(BTreeNode father) {
+        this.father = father;
+    }
+
     protected BTreeNode predecessor() {
         throw new UnsupportedOperationException("not yet implemented.");
         // TODO: get its idx from father(), if val < 0 even father unless most father is root, else get its idx - 1

@@ -4,9 +4,10 @@ import java.util.Vector;
 
 public class BTreeLeafNode<V> extends BTreeNode {
     private final Vector<V> leavesValues;
+    private BTreeLeafNode<V> nextLeaf;
 
     BTreeLeafNode(BTree tree) {
-        super(tree, father);
+        super(tree);
         this.leavesValues = new Vector<V>(t() - 1);
     }
 
@@ -33,5 +34,13 @@ public class BTreeLeafNode<V> extends BTreeNode {
 
     private boolean isLeavesFull() {
         return this.leavesValues.size() >= t() - 1;
+    }
+
+    public BTreeLeafNode<V> getNextLeaf() {
+        return nextLeaf;
+    }
+
+    public void setNextLeaf(BTreeLeafNode<V> nextLeaf) {
+        this.nextLeaf = nextLeaf;
     }
 }
