@@ -7,13 +7,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.Collection;
 
 // TODO: Javadoc for class BTree
 public class BTree<VType> {
     // Note: you cannot confirm what key type will be before completion of invoking ctor.
-    private BTreeNode<VType> rootNode;
+    private BTreeNode rootNode;
     private BTreeProperties properties;
 
     /**
@@ -157,5 +159,20 @@ public class BTree<VType> {
 
     public BTreeProperties getProperties() {
         return properties;
+    }
+
+    boolean isValueMatchActualType(Object value) {
+        return getGenericTypeClass().isInstance(value);
+    }
+
+    private Class<VType> getGenericTypeClass() {
+        try {
+            String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+            Class<?> clazz = Class.forName(className);
+            //noinspection unchecked
+            return (Class<VType>) clazz;
+        } catch (Exception e) {
+            throw new IllegalStateException("Class is not parametrized with generic type!!! Please use extends <> ");
+        }
     }
 }

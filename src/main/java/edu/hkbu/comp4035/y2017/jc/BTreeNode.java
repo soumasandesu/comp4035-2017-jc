@@ -105,14 +105,14 @@ public abstract class BTreeNode<S> implements Serializable {
         return keys.subList(start_inclusive, end_exclusive);
     }
 
-    private boolean isKeysFull() {
+    boolean isKeysFull() {
         // max deg of keys = 2t - 1
-        return this.keys.size() >= 2 * t() - 1;
+        return n() >= 2 * t() - 1;
     }
 
-    private boolean isKeysHungry() {
+    boolean isKeysHungry() {
         // min deg of keys = t
-        return this.keys.size() < t();
+        return n() < t();
     }
 
     boolean addSubItemValue(S s) {
@@ -164,5 +164,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return this.tree.getProperties().getDegree();
     }
 
-
+    int n() {
+        return this.keys.size();
+    }
 }
