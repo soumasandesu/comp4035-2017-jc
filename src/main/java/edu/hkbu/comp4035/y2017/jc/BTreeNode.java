@@ -8,18 +8,10 @@ public abstract class BTreeNode<S> implements Serializable {
     private final BTree tree;
     private final Vector<Integer> keys;
     private final Vector<S> subItems;
-    @Deprecated
-    private BTreeNode father;
 
     // TODO: more ctors
-
     BTreeNode(BTree tree) {
-        this(tree, null);
-    }
-
-    BTreeNode(BTree tree, @Deprecated BTreeNode father) {
         this.tree = tree;
-        this.father = father;
         keys = new Vector<>();
         subItems = new Vector<>();
     }
@@ -60,34 +52,5 @@ public abstract class BTreeNode<S> implements Serializable {
 
     int t() {
         return this.tree.getProperties().getDegree();
-    }
-
-    @Deprecated
-    protected  BTreeNode god() {
-        BTreeNode god = this;
-        while (god.father() != null) {
-            god = god.father();
-        }
-        return god;
-    }
-
-    @Deprecated
-    protected BTreeNode father() {
-        return father;
-    }
-
-    @Deprecated
-    protected void father(BTreeNode father) {
-        this.father = father;
-    }
-
-    protected BTreeNode predecessor() {
-        throw new UnsupportedOperationException("not yet implemented.");
-        // TODO: get its idx from father(), if val < 0 even father unless most father is root, else get its idx - 1
-    }
-
-    protected BTreeNode successor() {
-        throw new UnsupportedOperationException("not yet implemented.");
-        // TODO: get its idx from father(), if val > (2 * t) even father unless most father is root, else get its idx + 1
     }
 }
