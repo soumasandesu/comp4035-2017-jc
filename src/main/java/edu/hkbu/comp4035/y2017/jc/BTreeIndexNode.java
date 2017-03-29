@@ -2,7 +2,7 @@ package edu.hkbu.comp4035.y2017.jc;
 
 import java.util.Vector;
 
-public class BTreeIndexNode extends BTreeNode {
+public class BTreeIndexNode extends BTreeNode<BTreeIndexNode> {
     private final Vector<BTreeIndexNode> subNodes;
 
     BTreeIndexNode(BTree tree) {
@@ -15,24 +15,7 @@ public class BTreeIndexNode extends BTreeNode {
         return false;
     }
 
-    public boolean addSubNode(int key, BTreeIndexNode subNode) {
-        boolean ok = addKey(key);
-        if (ok) {
-            ok = addSubNodeValue(subNode);
-        }
-        return ok;
-    }
-
-    private boolean addSubNodeValue(BTreeIndexNode subNode) {
-        boolean ok = !isSubNodesFull();
-        if (ok) {
-            ok = subNodes.add(subNode);
-        }
-        return ok;
-    }
-
-
-    private boolean isSubNodesFull() {
-        return this.subNodes.size() >= t();
+    boolean isSubItemFull() {
+        return this.subNodes.size() >= 2 * t();
     }
 }

@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.Vector;
 
 // TODO: javadocs for BTreeNode<T>
-public abstract class BTreeNode implements Serializable {
+public abstract class BTreeNode<S> implements Serializable {
     private final BTree tree;
     private final Vector<Integer> keys;
+    private final Vector<S> subItems;
     @Deprecated
     private BTreeNode father;
 
@@ -20,6 +21,7 @@ public abstract class BTreeNode implements Serializable {
         this.tree = tree;
         this.father = father;
         keys = new Vector<>();
+        subItems = new Vector<>();
     }
 
     public abstract boolean isLeaf();
@@ -33,8 +35,26 @@ public abstract class BTreeNode implements Serializable {
     }
 
     private boolean isKeysFull() {
-        return this.keys.size() >= t() - 1;
+        return this.keys.size() >= 2 * t() - 1;
     }
+
+    public boolean addSubItem(int key, S value) {
+        boolean ok = addKey(key);
+        if (ok) {
+            ok = addSubItemValue(value);
+        }
+        return ok;
+    }
+
+    private boolean addSubItemValue(S s) {
+        boolean ok = !isSubItemFull();
+        if (ok) {
+            ok = subItems.add(s);
+        }
+        return ok;
+    }
+
+    abstract boolean isSubItemFull();
 
     /* tricky methods goes below */
 

@@ -1,5 +1,6 @@
 package edu.hkbu.comp4035.y2017.jc;
 
+import java.util.Collection;
 import java.util.Vector;
 
 public class BTreeLeafNode<V> extends BTreeNode {
@@ -16,24 +17,8 @@ public class BTreeLeafNode<V> extends BTreeNode {
         return true;
     }
 
-    public boolean addLeaf(int key, V value) {
-        boolean ok = addKey(key);
-        if (ok) {
-            ok = addLeafValue(value);
-        }
-        return ok;
-    }
-
-    private boolean addLeafValue(V value) {
-        boolean ok = !isLeavesFull();
-        if (ok) {
-            ok = leavesValues.add(value);
-        }
-        return ok;
-    }
-
-    private boolean isLeavesFull() {
-        return this.leavesValues.size() >= t() - 1;
+    boolean isSubItemFull() {
+        return this.leavesValues.size() >= 2 * t() - 1;
     }
 
     public BTreeLeafNode<V> getNextLeaf() {
