@@ -7,6 +7,7 @@ import java.util.Vector;
 public abstract class BTreeNode implements Serializable {
     private final BTree tree;
     private final Vector<Integer> keys;
+    @Deprecated
     private BTreeNode father;
 
     // TODO: more ctors
@@ -15,7 +16,7 @@ public abstract class BTreeNode implements Serializable {
         this(tree, null);
     }
 
-    BTreeNode(BTree tree, BTreeNode father) {
+    BTreeNode(BTree tree, @Deprecated BTreeNode father) {
         this.tree = tree;
         this.father = father;
         keys = new Vector<>();
@@ -41,6 +42,7 @@ public abstract class BTreeNode implements Serializable {
         return this.tree.getProperties().getDegree();
     }
 
+    @Deprecated
     protected  BTreeNode god() {
         BTreeNode god = this;
         while (god.father() != null) {
@@ -49,10 +51,12 @@ public abstract class BTreeNode implements Serializable {
         return god;
     }
 
+    @Deprecated
     protected BTreeNode father() {
         return father;
     }
 
+    @Deprecated
     protected void father(BTreeNode father) {
         this.father = father;
     }
