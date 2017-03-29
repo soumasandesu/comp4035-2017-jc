@@ -22,4 +22,10 @@ public class BTreeDeleteOperations {
     }
 
      */
+
+    // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
+
+    public static void doDelete(BTree bTree, int key) {
+
+    }
 }
