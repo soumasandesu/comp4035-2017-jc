@@ -118,7 +118,7 @@ public class BTreeInsertOperations<V> {
         // for j = x.n downto i
         //     x.key[j+1] = x.key[j]
         // x.key[i] = y.key[t]
-            x.addKeyAt(index, r.getKeyAt(0));
+        x.addKeyAt(index, r.getKeyAt(0));
         if (!r.isLeaf()) {
             r.removeKeyAt(0);
         }
