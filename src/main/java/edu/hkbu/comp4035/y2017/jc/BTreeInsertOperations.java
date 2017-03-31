@@ -20,12 +20,12 @@ public class BTreeInsertOperations<V> {
 
     // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
 
-    public BTreeNode doInsert(BTreeNode root, int key, V value) {
+    public void doInsert(BTree<V> bTree, int key, V value) {
+        BTreeNode newRoot = insert(bTree.getRootNode(), key, value);
+        bTree.setRootNode(newRoot);
+    }
 
-        if (!root.getTree().isValueMatchActualType(value)) {
-            throw new ClassCastException("!(value instanceof VType)");
-        }
-
+    public BTreeNode insert(BTreeNode root, int key, V value) {
         if (root.isKeysFull()) {  // r.n == 2t - 1
             // s = ALLOCATE-NODE()
             // s.leaf = FALSE

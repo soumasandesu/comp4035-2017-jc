@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-public class BTreeLeafNode<V> extends BTreeNode<V> {
+public final class BTreeLeafNode<V> extends BTreeNode<V> {
     private final Vector<V> leavesValues;
     private BTreeLeafNode<V> nextLeaf;
 
@@ -14,33 +14,33 @@ public class BTreeLeafNode<V> extends BTreeNode<V> {
     }
 
     @Override
-    public boolean isLeaf() {
+    public final boolean isLeaf() {
         return true;
     }
 
     @Override
-    BTreeLeafNode<V> getEmptyClone() {
+    final BTreeLeafNode<V> getEmptyClone() {
         return new BTreeLeafNode<V>(this.getTree());
     }
 
     @Override
-    Collection<V> getSubItems() {
+    final Collection<V> getSubItems() {
         //noinspection unchecked
         return (List<V>) leavesValues.clone();
     }
 
     @Override
-    Collection<V> getSubItems(int start_inclusive, int end_exclusive) {
+    final Collection<V> getSubItems(int start_inclusive, int end_exclusive) {
         return leavesValues.subList(start_inclusive, end_exclusive);
     }
 
     @Override
-    V getSubItemAt(int index) {
+    final V getSubItemAt(int index) {
         return leavesValues.get(index);
     }
 
     @Override
-    boolean removeSubItemValue(V v) {
+    final boolean removeSubItemValue(V v) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
             ok = leavesValues.removeElement(v);
@@ -49,7 +49,7 @@ public class BTreeLeafNode<V> extends BTreeNode<V> {
     }
 
     @Override
-    boolean removeSubItemValueAt(int index) {
+    final boolean removeSubItemValueAt(int index) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
             leavesValues.removeElementAt(index);
@@ -57,20 +57,20 @@ public class BTreeLeafNode<V> extends BTreeNode<V> {
         return ok;
     }
 
-    boolean isSubItemsFull() {
+    final boolean isSubItemsFull() {
         return this.leavesValues.size() >= 2 * t() - 1;
     }
 
     @Override
-    boolean isSubItemsHungry() {
+    final boolean isSubItemsHungry() {
         return this.leavesValues.size() < t() - 1;
     }
 
-    public BTreeLeafNode<V> getNextLeaf() {
+    final public BTreeLeafNode<V> getNextLeaf() {
         return nextLeaf;
     }
 
-    public void setNextLeaf(BTreeLeafNode<V> nextLeaf) {
+    final public void setNextLeaf(BTreeLeafNode<V> nextLeaf) {
         this.nextLeaf = nextLeaf;
     }
 }

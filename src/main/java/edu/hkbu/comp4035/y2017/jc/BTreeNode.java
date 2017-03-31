@@ -21,7 +21,7 @@ public abstract class BTreeNode<S> implements Serializable {
         subItems = new Vector<>();
     }
 
-    BTreeNode<S> deepClone() {
+    final BTreeNode<S> deepClone() {
         BTreeNode<S> clone = getEmptyClone();
         //noinspection unchecked
         clone.keys.addAll((Vector<Integer>) keys.clone());
@@ -30,7 +30,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return clone;
     }
 
-    public BTree getTree() {
+    public final BTree getTree() {
         return tree;
     }
 
@@ -42,7 +42,7 @@ public abstract class BTreeNode<S> implements Serializable {
 
     abstract Collection<S> getSubItems(int start_inclusive, int end_exclusive);
 
-    boolean addKey(int key) {
+    final boolean addKey(int key) {
         boolean ok = !isKeysFull();
         if (ok) {
             ok = this.keys.add(key);
@@ -50,7 +50,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean addKeyAt(int index, int key) {
+    final boolean addKeyAt(int index, int key) {
         boolean ok = !isKeysFull();
         if (ok) {
             this.keys.add(index, key);
@@ -58,7 +58,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean addKeys(Collection<Integer> keys) {
+    final boolean addKeys(Collection<Integer> keys) {
         boolean ok;
         for (Integer key : keys) {
             ok = addKey(key);
@@ -67,7 +67,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return true;
     }
 
-    boolean removeKey(int key) {
+    final boolean removeKey(int key) {
         boolean ok = !isKeysHungry();
         if (ok) {
             ok = keys.removeElement(key);
@@ -75,7 +75,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean removeKeyAt(int index) {
+    final boolean removeKeyAt(int index) {
         boolean ok = !isKeysHungry();
         if (ok) {
             keys.removeElementAt(index);
@@ -83,7 +83,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean removeKeys(Collection<Integer> keys) {
+    final boolean removeKeys(Collection<Integer> keys) {
         boolean ok;
         for (Integer key : keys) {
             ok = removeKey(key);
@@ -92,30 +92,30 @@ public abstract class BTreeNode<S> implements Serializable {
         return true;
     }
 
-    int getKeyAt(int index) {
+    final int getKeyAt(int index) {
         return keys.get(index);
     }
 
-    Collection<Integer> getKeys() {
+    final Collection<Integer> getKeys() {
         //noinspection unchecked
         return (Collection<Integer>) keys.clone();
     }
 
-    Collection<Integer> getKeys(int start_inclusive, int end_exclusive) {
+    final Collection<Integer> getKeys(int start_inclusive, int end_exclusive) {
         return keys.subList(start_inclusive, end_exclusive);
     }
 
-    boolean isKeysFull() {
+    final boolean isKeysFull() {
         // max deg of keys = 2t - 1
         return n() >= 2 * t() - 1;
     }
 
-    boolean isKeysHungry() {
+    final boolean isKeysHungry() {
         // min deg of keys = t
         return n() < t();
     }
 
-    boolean addSubItemValue(S s) {
+    final boolean addSubItemValue(S s) {
         boolean ok = !isSubItemsFull();
         if (ok) {
             ok = subItems.add(s);
@@ -123,7 +123,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean addSubItemValueAt(int index, S s) {
+    final boolean addSubItemValueAt(int index, S s) {
         boolean ok = !isSubItemsFull();
         if (ok) {
             subItems.add(index, s);
@@ -131,7 +131,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    boolean addSubItemValues(Collection<S> ss) {
+    final boolean addSubItemValues(Collection<S> ss) {
         boolean ok = true;
         for (S s : ss) {
             ok = this.addSubItemValue(s);
@@ -145,7 +145,7 @@ public abstract class BTreeNode<S> implements Serializable {
 
     abstract boolean removeSubItemValueAt(int index);
 
-    boolean removeSubItemsValues(Collection<S> ss) {
+    final boolean removeSubItemsValues(Collection<S> ss) {
         boolean ok;
         for (S s : ss) {
             ok = removeSubItemValue(s);
@@ -160,11 +160,11 @@ public abstract class BTreeNode<S> implements Serializable {
 
     /* tricky methods goes below */
 
-    int t() {
+    final int t() {
         return this.tree.getProperties().getDegree();
     }
 
-    int n() {
+    final int n() {
         return this.keys.size();
     }
 }

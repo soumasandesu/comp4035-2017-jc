@@ -70,6 +70,14 @@ public class BTree<VType> {
         // TODO: get tree height
     }
 
+    BTreeNode getRootNode() {
+        return rootNode;
+    }
+
+    void setRootNode(BTreeNode rootNode) {
+        this.rootNode = rootNode;
+    }
+
     /**
      * This method inserts a pair ({@code key}, {@code rid}) into the B+-Tree Index ({@code rid} can always be assumed
      * to be {@code 0} in your implementation). The actual pair ({@code key}, {@code rid}) is inserted into a leaf node.
@@ -115,7 +123,8 @@ public class BTree<VType> {
      * not found, it returns nothing. <i><b>Be careful with the duplicate keys that span over multiple pages.</b></i>
      * @param key1 The first key which may identify a data reference.
      * @param key2 The second key which may identify another data reference.
-     * @return The collection of {@code BTreeNode}s which are within range between {@code key1} and {@code key2} <u>inclusively</u>.
+     * @return The collection of {@code BTreeNode}s which are within range between {@code key1} and {@code key2}
+     * <u>inclusively</u>.
      */
     public Collection<BTreeNode<VType>> search(int key1, int key2) {
         throw new UnsupportedOperationException("not yet implemented.");

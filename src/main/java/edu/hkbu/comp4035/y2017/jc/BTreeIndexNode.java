@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-public class BTreeIndexNode extends BTreeNode<BTreeNode> {
+public final class BTreeIndexNode extends BTreeNode<BTreeNode> {
     private final Vector<BTreeNode> subNodes;
 
     BTreeIndexNode(BTree tree) {
@@ -13,33 +13,33 @@ public class BTreeIndexNode extends BTreeNode<BTreeNode> {
     }
 
     @Override
-    public boolean isLeaf() {
+    public final boolean isLeaf() {
         return false;
     }
 
     @Override
-    BTreeIndexNode getEmptyClone() {
+    final BTreeIndexNode getEmptyClone() {
         return new BTreeIndexNode(this.getTree());
     }
 
     @Override
-    BTreeNode getSubItemAt(int index) {
+    final BTreeNode getSubItemAt(int index) {
         return subNodes.get(index);
     }
 
     @Override
-    Collection<BTreeNode> getSubItems() {
+    final Collection<BTreeNode> getSubItems() {
         //noinspection unchecked
         return (List<BTreeNode>) subNodes.clone();
     }
 
     @Override
-    Collection<BTreeNode> getSubItems(int start_inclusive, int end_exclusive) {
+    final Collection<BTreeNode> getSubItems(int start_inclusive, int end_exclusive) {
         return subNodes.subList(start_inclusive, end_exclusive);
     }
 
     @Override
-    boolean removeSubItemValue(BTreeNode bTreeIndexNode) {
+    final boolean removeSubItemValue(BTreeNode bTreeIndexNode) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
             ok = subNodes.removeElement(bTreeIndexNode);
@@ -48,7 +48,7 @@ public class BTreeIndexNode extends BTreeNode<BTreeNode> {
     }
 
     @Override
-    boolean removeSubItemValueAt(int index) {
+    final boolean removeSubItemValueAt(int index) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
             subNodes.removeElementAt(index);
@@ -56,12 +56,12 @@ public class BTreeIndexNode extends BTreeNode<BTreeNode> {
         return ok;
     }
 
-    boolean isSubItemsFull() {
+    final boolean isSubItemsFull() {
         return this.subNodes.size() >= 2 * t();
     }
 
     @Override
-    boolean isSubItemsHungry() {
+    final boolean isSubItemsHungry() {
         return this.subNodes.size() < t();
     }
 }

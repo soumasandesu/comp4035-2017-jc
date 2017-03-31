@@ -25,7 +25,27 @@ public class BTreeDeleteOperations {
 
     // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
 
+    // Jacky, you may change all those names and signatures of all following methods.
+    // I'm just plotting the determination of this class for your reference, according to the textbook. -- Charles
+
     public static void doDelete(BTree bTree, int key) {
+        // search position
+        // get parent-1
+        // check size if hungry
+        //     check right won't hungry
+        //         borrow one from right
+        //         write new index @ parent of borrowed
+        //     else
+        //         merge
+        //     while parent is not null
+        //         check upper won't hungry
+    }
+
+    private static void checkHungryOrMerge(BTreeIndexNode indexNode, int pos) {
+
+    }
+
+    private static void merge(BTreeIndexNode indexNode, int posProcessing) {
 
     }
 }
