@@ -1,14 +1,13 @@
 package edu.hkbu.comp4035.y2017.jc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.Collection;
 
