@@ -97,7 +97,9 @@ public class BTree<VType> {
      * @return The current operating {@code BTree} object for further chain operation.
      */
     public BTree insert(int key, VType rid) {
-        throw new UnsupportedOperationException("not yet implemented.");
+        // P.S.: This statement might update the root due to the push/copy-up step during insertion.
+        BTreeInsertOperations.doInsert(this, key, rid);
+        return this; // chain operation like jQuery
     }
 
     /**
@@ -112,7 +114,9 @@ public class BTree<VType> {
      * @return The current operating {@code BTree} object for further chain operation.
      */
     public BTree delete(int key) {
-        throw new UnsupportedOperationException("not yet implemented.");
+        if (true) throw new UnsupportedOperationException("not yet implemented.");
+
+        return this; // chain operation like jQuery
     }
 
 
@@ -125,8 +129,24 @@ public class BTree<VType> {
      * @return The collection of {@code BTreeNode}s which are within range between {@code key1} and {@code key2}
      * <u>inclusively</u>.
      */
-    public Collection<BTreeNode<VType>> search(int key1, int key2) {
-        throw new UnsupportedOperationException("not yet implemented.");
+    public Collection<VType> search(int key1, int key2) {
+        if (key1 > key2) {
+            // trick
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                System.out.println("key1 > key2! Flipped but be careful.");
+                // you cannot `new` an `Throwable` and do print stack trace --
+                // only quote with `try` may enable JVM to get this tracked
+                e.printStackTrace();
+            }
+
+            int tr = key2;
+            key2 = key1;
+            key1 = tr;
+        }
+
+        return BTreeSearchOperations.doRangeSearchInclusive(this, key1, key2);
     }
 
     /**

@@ -2,7 +2,7 @@ package edu.hkbu.comp4035.y2017.jc;
 
 import java.util.Collection;
 
-public class BTreeInsertOperations<V> {
+class BTreeInsertOperations {
     /*
     This method inserts a pair (key, rid) into the B+-Tree Index (rid can always be assumed to be 0 in your implementation).
     The actual pair (key, rid) is inserted into a leaf node. But this insertion may cause one or more (key, pid) pair to be
@@ -20,12 +20,12 @@ public class BTreeInsertOperations<V> {
 
     // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
 
-    public void doInsert(BTree<V> bTree, int key, V value) {
+    static <V> void doInsert(BTree<V> bTree, int key, V value) {
         BTreeNode newRoot = insert(bTree.getRootNode(), key, value);
         bTree.setRootNode(newRoot);
     }
 
-    public BTreeNode insert(BTreeNode root, int key, V value) {
+    private static <V> BTreeNode insert(BTreeNode root, int key, V value) {
         if (root.isKeysFull()) {  // r.n == 2t - 1
             // s = ALLOCATE-NODE()
             // s.leaf = FALSE
@@ -50,7 +50,7 @@ public class BTreeInsertOperations<V> {
         return root;
     }
 
-    private void insertNonFull(BTreeNode x, int k, V v) {
+    private static <V> void insertNonFull(BTreeNode x, int k, V v) {
         if (!x.getTree().isValueMatchActualType(v)) {
             throw new ClassCastException("!(value instanceof VType)");
         }
@@ -76,7 +76,7 @@ public class BTreeInsertOperations<V> {
         }
     }
 
-    private void splitChild(BTreeIndexNode x, int index) {
+    private static void splitChild(BTreeIndexNode x, int index) {
         // z = AllocateNode()
         // y = x.c[i]
         // z.leaf = y.leaf
