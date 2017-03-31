@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.hkbu.comp4035.y2017.jc</groupId>
-    <artifactId>b+tree</artifactId>
+    <artifactId>BPlusTree</artifactId>
     <version>0.1</version>
 
     <properties>

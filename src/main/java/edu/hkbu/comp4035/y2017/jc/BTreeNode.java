@@ -1,6 +1,7 @@
 package edu.hkbu.comp4035.y2017.jc;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -23,10 +24,39 @@ public abstract class BTreeNode<S> implements Serializable {
 
     final BTreeNode<S> deepClone() {
         BTreeNode<S> clone = getEmptyClone();
-        //noinspection unchecked
-        clone.keys.addAll((Vector<Integer>) keys.clone());
-        //noinspection unchecked
-        clone.subItems.addAll((Collection<? extends S>) subItems.clone());
+
+        // deep clone keys
+        keys.stream()
+                .map(Integer::new)
+                .forEach(clone.keys::add);
+
+        // deep clone subItems
+        // case if value are btreenode
+        // case if value are clonable
+        // case if value are void
+        if (subItems.size() > 0) {
+            S test = getSubItemAt(0);
+
+            if (test instanceof BTreeNode) {
+                //noinspection unchecked
+                subItems.stream()
+                        .map(s -> ((BTreeNode)s).deepClone())
+                        .forEach(s -> clone.subItems.add((S)s));
+            } else {
+                /*
+                Do a shallow copy for following reasons:
+                a)  If the data type for values are primitive types, they're immutable that values can't actually be
+                    changed
+                b)  If the data type is object-like, deep copying object may cause much of overhead that won't make it
+                    efficient.
+
+                -- Charles
+                 */
+                //noinspection unchecked
+                clone.subItems.addAll((Collection<? extends S>) subItems.clone());
+            }
+        }
+
         return clone;
     }
 
@@ -166,5 +196,16 @@ public abstract class BTreeNode<S> implements Serializable {
 
     final int n() {
         return this.keys.size();
+    }
+
+    private Class<S> getSubItemsValuesClass() {
+        try {
+            String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+            Class<?> clazz = Class.forName(className);
+            //noinspection unchecked
+            return (Class<S>) clazz;
+        } catch (Exception e) {
+            throw new IllegalStateException("Class is not parametrized with generic type!!! Please use extends <> ");
+        }
     }
 }
