@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Vector;
 
 public final class BTreeLeafNode<V> extends BTreeNode<V> {
-    private final Vector<V> leavesValues;
     private BTreeLeafNode<V> nextLeaf;
 
     BTreeLeafNode(BTree tree) {
         super(tree);
-        this.leavesValues = new Vector<V>();
     }
 
     @Override
@@ -26,24 +24,24 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
     @Override
     final Collection<V> getSubItems() {
         //noinspection unchecked
-        return (List<V>) leavesValues.clone();
+        return (List<V>) subItems.clone();
     }
 
     @Override
     final Collection<V> getSubItems(int start_inclusive, int end_exclusive) {
-        return leavesValues.subList(start_inclusive, end_exclusive);
+        return subItems.subList(start_inclusive, end_exclusive);
     }
 
     @Override
     final V getSubItemAt(int index) {
-        return leavesValues.get(index);
+        return subItems.get(index);
     }
 
     @Override
     final boolean removeSubItemValue(V v) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
-            ok = leavesValues.removeElement(v);
+            ok = subItems.removeElement(v);
         }
         return ok;
     }
@@ -52,18 +50,18 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
     final boolean removeSubItemValueAt(int index) {
         boolean ok = !isSubItemsHungry();
         if (ok) {
-            leavesValues.removeElementAt(index);
+            subItems.removeElementAt(index);
         }
         return ok;
     }
 
     final boolean isSubItemsFull() {
-        return this.leavesValues.size() >= 2 * t() - 1;
+        return this.subItems.size() >= 2 * t() - 1;
     }
 
     @Override
     final boolean isSubItemsHungry() {
-        return this.leavesValues.size() < t() - 1;
+        return this.subItems.size() < t() - 1;
     }
 
     final public BTreeLeafNode<V> getNextLeaf() {

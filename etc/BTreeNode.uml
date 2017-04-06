@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>edu.hkbu.comp4035.y2017.jc.BTreeNode</OriginalElement>
+  <nodes>
+    <node x="-5695.499999999991" y="-3713.9999999999936">edu.hkbu.comp4035.y2017.jc.BTreeIndexNode</node>
+    <node x="-6106.499999999991" y="-3724.9999999999936">edu.hkbu.comp4035.y2017.jc.BTreeLeafNode</node>
+    <node x="-6109.999999999991" y="-4510.999999999994">edu.hkbu.comp4035.y2017.jc.BTreeNode</node>
+    <node x="-5761.999999999991" y="-4589.999999999994">java.io.Serializable</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="edu.hkbu.comp4035.y2017.jc.BTreeIndexNode" target="edu.hkbu.comp4035.y2017.jc.BTreeNode">
+      <point x="0.0" y="-125.5" />
+      <point x="-5506.999999999991" y="-3749.9999999999936" />
+      <point x="-5508.499999999991" y="-3749.9999999999936" />
+      <point x="200.5" y="368.0" />
+    </edge>
+    <edge source="edu.hkbu.comp4035.y2017.jc.BTreeLeafNode" target="edu.hkbu.comp4035.y2017.jc.BTreeNode">
+      <point x="0.0" y="-136.5" />
+      <point x="-5910.999999999991" y="-3749.9999999999936" />
+      <point x="-5909.499999999991" y="-3749.9999999999936" />
+      <point x="-200.5" y="368.0" />
+    </edge>
+    <edge source="edu.hkbu.comp4035.y2017.jc.BTreeNode" target="java.io.Serializable">
+      <point x="0.0" y="-368.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="-5692.0" y="-3818.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
