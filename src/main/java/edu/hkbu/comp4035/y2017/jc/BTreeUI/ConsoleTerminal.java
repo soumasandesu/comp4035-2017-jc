@@ -58,29 +58,13 @@ class ConsoleTerminal {
         BTree bTree; // cannot use type Void << http://stackoverflow.com/questions/5568409/
         String importFilePath = ns.getString("fname");
         if (importFilePath == null) {
-            int deg;
-            try {
-                deg = Integer.parseInt(ns.getString("degree"));
-            } catch (NumberFormatException ignored) {
-                System.out.println("The degree must be an integer");
-                System.exit(-1);
-                return;
-            }
-            System.out.println("Creating new empty B+ tree.");
-            bTree = BTree.createBTreeCharSequence(String.class, new BTreeProperties(deg));
+            bTree = newBlankBTreeFromPrompt(ns.getString("degree"));
         } else {
-            // TODO: move to new method
             try {
-                bTree = BTree.importJsonFromFilePath(importFilePath);
-            } catch (FileNotFoundException ignored) {
-                System.out.printf("The file \"%s\" does not exist! \r\nExit.", importFilePath);
-                System.exit(1);
-                return;
+                bTree = newBTreeFromJsonFilePath(importFilePath);
             } catch (Exception e) {
-                System.out.printf("Cannot read BTree file! Due to the following reason:\r\n%s\r\n", e.getMessage());
-                e.printStackTrace();
                 System.out.println("Exit.");
-                System.exit(2);
+                System.exit(1);
                 return;
             }
         }
@@ -102,10 +86,11 @@ class ConsoleTerminal {
                 int key2;
 
                 // why not just parse commands by argparse :o) -- charles
+                // and why not generalise -- switch-case is bad idea
                 switch (cmd) {
                     case "insert": // 'insert key1:int value:*'
                         if (st.countTokens() < 1) {
-                            System.out.println("syntax: 'insert key:int value:*'");
+                            System.out.println("Syntax: 'insert key:int value:*'");
                             break;
                         }
                         try {
@@ -118,7 +103,7 @@ class ConsoleTerminal {
                         break;
                     case "delete": // 'delete key1:int'
                         if (st.countTokens() < 1) {
-                            System.out.println("syntax: 'delete key:int'");
+                            System.out.println("Syntax: 'delete key:int'");
                             break;
                         }
                         try {
@@ -131,7 +116,7 @@ class ConsoleTerminal {
                         break;
                     case "search": // 'search keyLow:int [keyUp:int]'
                         if (st.countTokens() < 1) {
-                            System.out.println("syntax: 'search keyLow:int [keyUp:int]'");
+                            System.out.println("Syntax: 'search keyLow:int [keyUp:int]'");
                             break;
                         }
 
@@ -171,7 +156,7 @@ class ConsoleTerminal {
                         break;
                     case "import": // 'import filepath:string(mime=application/json)'
                         if (st.countTokens() < 1) {
-                            System.out.println("syntax: 'import filepath:string(mime=application/json)'");
+                            System.out.println("Syntax: 'import filepath:string(mime=application/json)'");
                             break;
                         }
                         File file = new File(st.nextToken());
@@ -197,7 +182,7 @@ class ConsoleTerminal {
                         break;
                     case "export": // 'export filepath:string [overwrite:boolean=False]'
                         if (st.countTokens() < 1) {
-                            System.out.println("syntax: 'export filepath:string [overwrite:boolean=False]'");
+                            System.out.println("Syntax: 'export filepath:string [overwrite:boolean=False]'");
                             break;
                         }
                         String path = st.nextToken();
@@ -222,6 +207,16 @@ class ConsoleTerminal {
                         } catch (IOException e) {
                             System.out.printf("Cannot write to %s: %s\n", path, e.getMessage());
                             e.printStackTrace();
+                        }
+                        break;
+                    case "reset": // 'reset deg:int'
+                        if (st.countTokens() < 1) {
+                            System.out.println("Syntax: 'reset deg:int'");
+                            break;
+                        }
+                        newBTree = newBlankBTreeFromPrompt(st.nextToken());
+                        if (newBTree != null) {
+                            bTree = newBTree;
                         }
                         break;
                     case "about": // 'about'
@@ -252,5 +247,35 @@ class ConsoleTerminal {
         msg += "==========About==========\n";
         msg += "=========================\n";
         return msg;
+    }
+
+    private static BTree newBlankBTreeFromPrompt(String strDegree) {
+        int deg;
+        try {
+            deg = Integer.parseInt(strDegree);
+            if (deg < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ignored) {
+            System.out.println("ERROR: The degree must be an positive integer");
+            System.exit(-1);
+            return null;
+        }
+        System.out.printf("Creating new empty B+ tree with degree=%d\n", deg);
+        return BTree.createBTreeCharSequence(String.class, new BTreeProperties(deg));
+    }
+
+    private static BTree newBTreeFromJsonFilePath(String filePath) throws Exception { // yes i mud 9 dol throw
+        try {
+            return BTree.importJsonFromFilePath(filePath);
+        } catch (FileNotFoundException e) {
+            System.out.printf("The file \"%s\" does not exist!", filePath);
+            System.exit(1);
+            throw new Exception(e);
+        } catch (Exception e) {
+            System.out.printf("Cannot read BTree-JSON file:\r\n%s\r\n", e.getMessage());
+            e.printStackTrace();
+            throw new Exception(e);
+        }
     }
 }
