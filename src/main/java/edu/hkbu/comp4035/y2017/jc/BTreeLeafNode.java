@@ -24,41 +24,7 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
 
     @Override
     final BTreeLeafNode<V> getEmptyClone() {
-        return new BTreeLeafNode<V>(this.getTree());
-    }
-
-    @Override
-    final Collection<V> getSubItems() {
-        //noinspection unchecked
-        return (List<V>) subItems.clone();
-    }
-
-    @Override
-    final Collection<V> getSubItems(int start_inclusive, int end_exclusive) {
-        return subItems.subList(start_inclusive, end_exclusive);
-    }
-
-    @Override
-    final V getSubItemAt(int index) {
-        return subItems.get(index);
-    }
-
-    @Override
-    final boolean removeSubItemValue(V v) {
-        boolean ok = !isSubItemsHungry() && subItems.contains(v);
-        if (ok) {
-            subItems.remove(v);
-        }
-        return ok;
-    }
-
-    @Override
-    final boolean removeSubItemValueAt(int index) {
-        boolean ok = !isSubItemsHungry() && subItems.size() > index;
-        if (ok) {
-            subItems.remove(index);
-        }
-        return ok;
+        return new BTreeLeafNode<>(this.getTree());
     }
 
     final boolean isSubItemsFull() {

@@ -3,11 +3,11 @@ package edu.hkbu.comp4035.y2017.jc;
 import java.util.Collection;
 
 @SuppressWarnings("Duplicates")
-class BTreeInsertOperations {
+class BTreeInsertOperations2 {
     /*
     This method inserts a pair (key, rid) into the B+-Tree Index (rid can always be assumed to be 0 in your implementation).
     The actual pair (key, rid) is inserted into a leaf node. But this insertion may cause one or more (key, pid) pair to be
-    inserted into index nodes. You should always check to see if the current node has enough space before you insert. If you
+    inserted into index nodes. You should always check to see if the current node has enough space before you insertChooseBypass. If you
     don't have enough space, you have to splitChild the current node by creating a new node, and copy some of the data over from
     the current node to the new node.1 Splitting will cause a new entry to be added in the parent node.
 
@@ -16,7 +16,7 @@ class BTreeInsertOperations {
     linked as a link list.
 
     Due to the complexity of this function, we recommend that you write separate functions for different cases. For example,
-    it is a good idea to write a function to insert into a leaf node, and a function to insert into an index node.
+    it is a good idea to write a function to insertChooseBypass into a leaf node, and a function to insertChooseBypass into an index node.
      */
 
     // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
@@ -32,18 +32,15 @@ class BTreeInsertOperations {
             // s = ALLOCATE-NODE()
             // s.leaf = FALSE
             // s.n = 0
-            BTreeIndexNode newRoot = new BTreeIndexNode(root.getTree());
-
             // s.c[1] = r
-            newRoot.addSubItemValue(root);
-
             // B-TREE-SPLIT-CHILD(s, 1)
-            splitChild(newRoot, 0);
-
             // B-TREE-INSERT-NON-FULL(s, k)
-            insertNonFull(newRoot, key, value);
-
             // T.root = s
+
+            BTreeIndexNode newRoot = new BTreeIndexNode(root.getTree());
+            newRoot.addSubItemValue(root);
+            insertChooseBypass(newRoot, key, value, true);
+            splitChild(newRoot, 0); // web example says to split after insertChooseBypass
             return newRoot;
         } else {
             insertNonFull(root, key, value);
@@ -53,6 +50,10 @@ class BTreeInsertOperations {
     }
 
     private static <V> void insertNonFull(BTreeNode x, int k, V v) {
+        insertChooseBypass(x, k, v, false);
+    }
+
+    private static <V> void insertChooseBypass(BTreeNode x, int k, V v, boolean bypass) {
         if (!x.getTree().isValueMatchActualType(v)) {
             throw new ClassCastException("!(value instanceof VType)");
         }
@@ -62,19 +63,19 @@ class BTreeInsertOperations {
             i--;
         }
         if (x.isLeaf()) {
-            x.addKeyAt(i + 1, k);
+            x.addKeyAt(i + 1, k, bypass);
             //noinspection unchecked
-            x.addSubItemValueAt(i + 1, v);
+            x.addSubItemValueAt(i + 1, v, bypass);
         } else {
             i++;
             BTreeNode xc = (BTreeNode) x.getSubItemAt(i);
-            if (xc.isKeysFull()) {
+            if (xc.isKeysFull() && !bypass) {
                 splitChild((BTreeIndexNode) x, i);
                 if (k > x.getKeyAt(i)) {
                     xc = (BTreeNode) x.getSubItemAt(++i);
                 }
             }
-            insertNonFull(xc, k, v);
+            insertChooseBypass(xc, k, v, bypass);
         }
     }
 

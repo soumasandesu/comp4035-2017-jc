@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /*
     All of the `BTreeNodes` should only have the pointer of its child. The operation to get parent should ... not get,
@@ -53,9 +54,22 @@ abstract class BTreeNode<S> implements Serializable {
     final boolean addKeyAt(int index, int key) {
         boolean ok = !isKeysFull();
         if (ok) {
-            this.keys.add(index, key);
+            this.addKeyAtBypass(index, key);
         }
         return ok;
+    }
+
+    final boolean addKeyAt(int index, int key, boolean bypass) {
+        if (bypass) {
+            addKeyAtBypass(index, key);
+            return true;
+        } else {
+            return addKeyAt(index, key);
+        }
+    }
+
+    final void addKeyAtBypass(int index, int key) {
+        this.keys.add(index, key);
     }
 
     final boolean addKeys(Collection<Integer> keys) {
@@ -70,9 +84,22 @@ abstract class BTreeNode<S> implements Serializable {
     final boolean addSubItemValueAt(int index, S s) {
         boolean ok = !isSubItemsFull();
         if (ok) {
-            subItems.add(index, s);
+            addSubItemValueAtBypass(index, s);
         }
         return ok;
+    }
+
+    final boolean addSubItemValueAt(int index, S s, boolean bypass) {
+        if (bypass) {
+            addSubItemValueAtBypass(index, s);
+            return true;
+        } else {
+            return addSubItemValueAt(index, s);
+        }
+    }
+
+    final void addSubItemValueAtBypass(int index, S s) {
+        subItems.add(index, s);
     }
 
     final boolean addSubItemValues(Collection<S> ss) {
@@ -136,11 +163,18 @@ abstract class BTreeNode<S> implements Serializable {
         return keys.subList(start_inclusive, end_exclusive);
     }
 
-    abstract S getSubItemAt(int index);
+    final S getSubItemAt(int index) {
+        return subItems.get(index);
+    }
 
-    abstract Collection<S> getSubItems();
+    final Collection<S> getSubItems() {
+        //noinspection unchecked
+        return (List<S>) subItems.clone();
+    }
 
-    abstract Collection<S> getSubItems(int start_inclusive, int end_exclusive);
+    final Collection<S> getSubItems(int start_inclusive, int end_exclusive) {
+        return subItems.subList(start_inclusive, end_exclusive);
+    }
 
     private Class<S> getSubItemsValuesClass() {
         try {
@@ -190,9 +224,22 @@ abstract class BTreeNode<S> implements Serializable {
     final boolean removeKeyAt(int index) {
         boolean ok = !isKeysHungry() && keys.size() > index;
         if (ok) {
-            keys.remove(index);
+            removeKeyAtBypass(index);
         }
         return ok;
+    }
+
+    final boolean removeKeyAt(int index, boolean bypass) {
+        if (bypass) {
+            removeKeyAtBypass(index);
+            return true;
+        } else {
+            return removeKeyAt(index);
+        }
+    }
+
+    final void removeKeyAtBypass(int index) {
+        keys.remove(index);
     }
 
     final boolean removeKeys(Collection<Integer> keys) {
@@ -206,9 +253,34 @@ abstract class BTreeNode<S> implements Serializable {
         return true;
     }
 
-    abstract boolean removeSubItemValue(S s);
+    final boolean removeSubItemValue(S s) {
+        boolean ok = !isSubItemsHungry() && subItems.contains(s);
+        if (ok) {
+            subItems.remove(s);
+        }
+        return ok;
+    }
 
-    abstract boolean removeSubItemValueAt(int index);
+    final boolean removeSubItemValueAt(int index) {
+        boolean ok = !isSubItemsHungry() && subItems.size() > index;
+        if (ok) {
+            removeSubItemValueAtBypass(index);
+        }
+        return ok;
+    }
+
+    final boolean removeSubItemValueAt(int index, boolean bypass) {
+        if (bypass) {
+            removeSubItemValueAtBypass(index);
+            return true;
+        } else {
+            return removeSubItemValueAt(index);
+        }
+    }
+
+    final void removeSubItemValueAtBypass(int index) {
+        subItems.remove(index);
+    }
 
     final boolean removeSubItemsValues(Collection<S> ss) {
         Object[] arr = ss.stream().toArray();
