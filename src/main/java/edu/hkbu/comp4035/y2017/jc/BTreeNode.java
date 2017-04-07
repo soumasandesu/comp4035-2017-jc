@@ -3,23 +3,35 @@ package edu.hkbu.comp4035.y2017.jc;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.LinkedList;
 
 /*
     All of the `BTreeNodes` should only have the pointer of its child. The operation to get parent should ... not get,
     but should have already been recorded by `BTree*Operations` whilst traversing through different levels.
  */
 // TODO: javadocs for BTreeNode<S>
-public abstract class BTreeNode<S> implements Serializable {
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = BTreeIndexNode.class, name = "BTreeIndexNode"),
+//        @JsonSubTypes.Type(value = BTreeLeafNode.class, name = "BTreeLeafNode")
+//})
+abstract class BTreeNode<S> implements Serializable {
+//    @JsonIgnore
     private final BTree tree;
-    private final Vector<Integer> keys;
-    final Vector<S> subItems;
+//    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    private final LinkedList<Integer> keys;
+//    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    final LinkedList<S> subItems;
 
-    // TODO: more ctors
     BTreeNode(BTree tree) {
         this.tree = tree;
-        keys = new Vector<>();
-        subItems = new Vector<>();
+        keys = new LinkedList<>();
+        subItems = new LinkedList<>();
+    }
+
+    BTreeNode(BTree tree, LinkedList<Integer> keys, LinkedList<S> subItems) {
+        this.tree = tree;
+        this.keys = keys;
+        this.subItems = subItems;
     }
 
     final boolean addSubItemValue(S s) {
@@ -30,7 +42,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    final boolean addKey(int key) {
+    private boolean addKey(int key) {
         boolean ok = !isKeysFull();
         if (ok) {
             ok = this.keys.add(key);
@@ -71,7 +83,7 @@ public abstract class BTreeNode<S> implements Serializable {
         return ok;
     }
 
-    final BTreeNode<S> deepClone() {
+    private BTreeNode<S> deepClone() {
         BTreeNode<S> clone = getEmptyClone();
 
         // deep clone keys
@@ -150,9 +162,10 @@ public abstract class BTreeNode<S> implements Serializable {
         return n() >= 2 * t() - 1;
     }
 
-    final boolean isKeysHungry() {
-        // min deg of keys = t
-        return n() < t();
+    private boolean isKeysHungry() {
+        // Every node other than the root must have at least t - 1 keys.
+        // min deg of keys = t - 1
+        return getTree().getRootNode() != this && n() < t() - 1;
     }
 
     public abstract boolean isLeaf();
@@ -165,25 +178,28 @@ public abstract class BTreeNode<S> implements Serializable {
         return this.keys.size();
     }
 
-    final boolean removeKey(int key) {
-        boolean ok = !isKeysHungry();
+    private boolean removeKey(int key) {
+        boolean ok = !isKeysHungry() && keys.contains(key);
         if (ok) {
-            ok = keys.removeElement(key);
+            // can't get object reference, so... hack
+            keys.remove(keys.indexOf(key));
         }
         return ok;
     }
 
     final boolean removeKeyAt(int index) {
-        boolean ok = !isKeysHungry();
+        boolean ok = !isKeysHungry() && keys.size() > index;
         if (ok) {
-            keys.removeElementAt(index);
+            keys.remove(index);
         }
         return ok;
     }
 
     final boolean removeKeys(Collection<Integer> keys) {
+        int[] arr = keys.stream().mapToInt(i -> i).toArray();
+
         boolean ok;
-        for (Integer key : keys) {
+        for (int key : arr) {
             ok = removeKey(key);
             if (!ok) return false;
         }
@@ -192,14 +208,15 @@ public abstract class BTreeNode<S> implements Serializable {
 
     abstract boolean removeSubItemValue(S s);
 
-    /* tricky methods goes below */
-
     abstract boolean removeSubItemValueAt(int index);
 
     final boolean removeSubItemsValues(Collection<S> ss) {
+        Object[] arr = ss.stream().toArray();
+
         boolean ok;
-        for (S s : ss) {
-            ok = removeSubItemValue(s);
+        for (Object o : arr) {
+            //noinspection unchecked
+            ok = removeSubItemValue((S)o);
             if (!ok) return false;
         }
         return true;

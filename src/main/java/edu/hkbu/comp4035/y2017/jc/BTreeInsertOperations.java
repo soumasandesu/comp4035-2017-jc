@@ -20,6 +20,7 @@ class BTreeInsertOperations {
 
     // THROW WHENEVER ERROR ENCOUNTERS!!! null IS NOT FOR ERROR THINGS!
 
+
     static <V> void doInsert(BTree<V> bTree, int key, V value) {
         BTreeNode newRoot = insert(bTree.getRootNode(), key, value);
         bTree.setRootNode(newRoot);
@@ -88,7 +89,7 @@ class BTreeInsertOperations {
         // for j = 1 to t-1
         //     z.key[j] = y.key[j+t]
         {
-            Collection l_rightHalfKeys = l.getKeys(l.t() + 1, l.t() * 2);  // deep clone
+            Collection l_rightHalfKeys = l.getKeys(l.t(), (l.t() * 2) - 1);  // deep clone
             //noinspection unchecked
             r.addKeys(l_rightHalfKeys);
             //noinspection unchecked
@@ -101,7 +102,7 @@ class BTreeInsertOperations {
         {
             int endPosExclusive = l.isLeaf() ? l.t() * 2 : l.t() * 2 + 1;
 
-            Collection l_rightHalfSubValues = l.getSubItems(l.t(), endPosExclusive);  // deep clone
+            Collection l_rightHalfSubValues = l.getSubItems(l.t(), endPosExclusive - 1);  // deep clone
             //noinspection unchecked
             r.addSubItemValues(l_rightHalfSubValues);
             //noinspection unchecked

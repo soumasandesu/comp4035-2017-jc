@@ -1,34 +1,49 @@
 package edu.hkbu.comp4035.y2017.jc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.reflect.ParameterizedType;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Collection;
 
 // TODO: Javadoc for class BTree
-public class BTree<VType> {
+public class BTree<VType> implements Serializable {
+    private Class<VType> valueType; // TODO: final
     // Note: you cannot confirm what key type will be before completion of invoking ctor.
     private BTreeNode rootNode;
     private BTreeProperties properties;
 
     /**
-     * The constructor for the BTree takes in a filename, and checks if a file with that name already exists.
-     * If the file exists, we "open" the file and build an initial B+-tree based on the key values in the file.
-     * Otherwise, we return an error message and the program terminates.
+     * Builds a B+Tree with an empty root <b>leaf</b> node, and value of {@code CharSequence}s.
+     * This will create a new empty leaf node object and be put
+     * its object reference to BTree as the root node for further insertion.<p>
+     * This operation coses O(1) time.
      */
-    public BTree(String pathname) throws IOException {
-        File file = new File(pathname);
+    public static <CSType extends CharSequence> BTree<CSType> createBTreeCharSequence(
+            Class<CSType> valueType, BTreeProperties properties) {
+        return new BTree<>(valueType, properties);
+    }
 
-        if (!file.isFile()) throw new FileNotFoundException("404: " + pathname);
+    /**
+     * Builds a B+Tree with an empty root <b>leaf</b> node, and value of {@code Number}s.
+     * This will create a new empty leaf node object and be put
+     * its object reference to BTree as the root node for further insertion.<p>
+     * This operation coses O(1) time.
+     */
+    public static <NumType extends Number> BTree<NumType> createBTreeNumber(
+            Class<NumType> valueType, BTreeProperties properties) {
+        return new BTree<>(valueType, properties);
+    }
 
-        String content = StringUtils.join(Files.readAllLines(file.toPath()), "");
-        importJson(content);
+    private BTree(Class<VType> valueType, BTreeProperties properties) {
+        this.rootNode = new BTreeLeafNode<VType>(this);
+        this.properties = properties;
+        this.valueType = valueType;
+    }
+
+    BTree(Class<VType> valueType, BTreeProperties properties, BTreeNode rootNode) {
+        this(valueType, properties);
+        this.rootNode = rootNode;
     }
 
     /**
@@ -43,25 +58,22 @@ public class BTree<VType> {
         super.finalize();
     }
 
-    private BTree importJson(String content) {
-        try {
-            BTreeDumpJsonFormat.Parser.fromString(content);
-            return this;
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO: throwing on importJson(String)
+    /**
+     * Takes in a filename, and checks if a file with that name already exists.
+     * If the file exists, we "open" the file and build an initial B+-tree based on the key values in the file.
+     * Otherwise, we return an error message and the program terminates.
+     */
+    public static BTree importJsonFromFilePath(String pathname) throws IOException, ClassNotFoundException {
+        File file = new File(pathname);
+        if (!file.isFile()) {
+            throw new FileNotFoundException("404: " + pathname);
         }
-        return null;
+        String strJson = StringUtils.join(Files.readAllLines(file.toPath()), "");
+        return BTreeDumpJsonFormat.Parse.toBTree(strJson);
     }
 
-    private String exportJson() {
-        try {
-            return BTreeDumpJsonFormat.Stringfy.asString(rootNode);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            // TODO: throwing on exportJson()
-        }
-        return null;
+    public String exportJson() {
+        return BTreeDumpJsonFormat.Stringfy.fromBTree(this);
     }
 
     public int getHeight() {
@@ -141,9 +153,9 @@ public class BTree<VType> {
                 e.printStackTrace();
             }
 
-            int tr = key2;
+            int i = key2;
             key2 = key1;
-            key1 = tr;
+            key1 = i;
         }
 
         return BTreeSearchOperations.doRangeSearchInclusive(this, key1, key2);
@@ -190,17 +202,23 @@ public class BTree<VType> {
     }
 
     boolean isValueMatchActualType(Object value) {
-        return getGenericTypeClass().isInstance(value);
+        return value == null || getValueType().isInstance(value); // cannot check if value is already null
     }
 
-    private Class<VType> getGenericTypeClass() {
-        try {
-            String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
-            Class<?> clazz = Class.forName(className);
-            //noinspection unchecked
-            return (Class<VType>) clazz;
-        } catch (Exception e) {
-            throw new IllegalStateException("Class is not parametrized with generic type!!! Please use extends <> ");
-        }
+    Class<VType> getValueType() {
+//        try {
+//            Type gs = getClass().getGenericSuperclass();
+//            String className = ((ParameterizedType) gs).getActualTypeArguments()[0].getTypeName();
+//            Class<?> clazz = Class.forName(className);
+//            //noinspection unchecked
+//            return (Class<VType>) clazz;
+//        } catch (Exception e) {
+//            throw new IllegalStateException("Class is not parametrized with generic type!!! Please use extends <> ");
+//        }
+        return valueType;
+    }
+
+    String getHashString() {
+        return Integer.toHexString(hashCode());
     }
 }

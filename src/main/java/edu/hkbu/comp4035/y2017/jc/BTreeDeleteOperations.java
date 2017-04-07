@@ -1,6 +1,6 @@
 package edu.hkbu.comp4035.y2017.jc;
 
-public class BTreeDeleteOperations {
+class BTreeDeleteOperations {
     /*
 
     This method deletes an entry (key, rid) from a leaf node. Deletion from a leaf node may cause one or more entries in
@@ -28,7 +28,7 @@ public class BTreeDeleteOperations {
     // Jacky, you may change all those names and signatures of all following methods.
     // I'm just plotting the determination of this class for your reference, according to the textbook. -- Charles
 
-    public static void doDelete(BTree bTree, int key) {
+    static void doDelete(BTree bTree, int key) {
         // search position
         // get parent-1
         // check size if hungry

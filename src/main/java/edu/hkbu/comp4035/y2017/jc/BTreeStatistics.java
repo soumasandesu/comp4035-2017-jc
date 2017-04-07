@@ -16,23 +16,23 @@ public class BTreeStatistics {
         this.height = height;
     }
 
-    public int getNodesCount() {
+    private int getNodesCount() {
         return nodesCount;
     }
 
-    public int getDataEntriesCount() {
+    private int getDataEntriesCount() {
         return dataEntriesCount;
     }
 
-    public int getIndexEntriesCount() {
+    private int getIndexEntriesCount() {
         return indexEntriesCount;
     }
 
-    public int getAverageFillFactor() {
+    private int getAverageFillFactor() {
         return averageFillFactor;
     }
 
-    public int getHeight() {
+    private int getHeight() {
         return height;
     }
 

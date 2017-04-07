@@ -3,7 +3,7 @@ package edu.hkbu.comp4035.y2017.jc;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class BTreeSearchOperations {
+class BTreeSearchOperations {
     /*
      This method implements range queries. Given a search range ({@code key1}, {@code key2}), the method returns all
      the qualifying key values in the range of between {@code key1} and {@code key2} in the B+-tree. If such keys are

@@ -1,6 +1,7 @@
 package edu.hkbu.comp4035.y2017.jc;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -9,6 +10,11 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
 
     BTreeLeafNode(BTree tree) {
         super(tree);
+    }
+
+    public BTreeLeafNode(BTree tree, LinkedList<Integer> keys, LinkedList<V> subItems, BTreeLeafNode<V> nextLeaf) {
+        super(tree, keys, subItems);
+        this.nextLeaf = nextLeaf;
     }
 
     @Override
@@ -39,18 +45,18 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
 
     @Override
     final boolean removeSubItemValue(V v) {
-        boolean ok = !isSubItemsHungry();
+        boolean ok = !isSubItemsHungry() && subItems.contains(v);
         if (ok) {
-            ok = subItems.removeElement(v);
+            subItems.remove(v);
         }
         return ok;
     }
 
     @Override
     final boolean removeSubItemValueAt(int index) {
-        boolean ok = !isSubItemsHungry();
+        boolean ok = !isSubItemsHungry() && subItems.size() > index;
         if (ok) {
-            subItems.removeElementAt(index);
+            subItems.remove(index);
         }
         return ok;
     }
@@ -61,14 +67,16 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
 
     @Override
     final boolean isSubItemsHungry() {
-        return this.subItems.size() < t() - 1;
+        // Every node other than the root must have at least t - 1 keys.
+        // ** Count of sub items of a leaf node == count of keys.
+        return getTree().getRootNode() != this && this.subItems.size() < t() - 1;
     }
 
-    final public BTreeLeafNode<V> getNextLeaf() {
+    public final BTreeLeafNode<V> getNextLeaf() {
         return nextLeaf;
     }
 
-    final public void setNextLeaf(BTreeLeafNode<V> nextLeaf) {
+    public final void setNextLeaf(BTreeLeafNode<V> nextLeaf) {
         this.nextLeaf = nextLeaf;
     }
 }
