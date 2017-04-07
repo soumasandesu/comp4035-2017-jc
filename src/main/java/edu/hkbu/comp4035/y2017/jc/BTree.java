@@ -77,8 +77,11 @@ public class BTree<VType> implements Serializable {
     }
 
     public int getHeight() {
-        throw new UnsupportedOperationException("not yet implemented.");
-        // TODO: get tree height
+        int i = 0;
+        for (BTreeNode n = getRootNode(); !n.isLeaf(); n = ((BTreeIndexNode)n).getSubItemAt(0)) {
+            ++i;
+        }
+        return i;
     }
 
     BTreeNode getRootNode() {

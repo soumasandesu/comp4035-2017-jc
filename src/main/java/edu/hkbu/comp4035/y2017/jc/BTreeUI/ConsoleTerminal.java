@@ -1,6 +1,7 @@
 package edu.hkbu.comp4035.y2017.jc.BTreeUI;
 
 import edu.hkbu.comp4035.y2017.jc.BTree;
+import edu.hkbu.comp4035.y2017.jc.BTreePrinter;
 import edu.hkbu.comp4035.y2017.jc.BTreeProperties;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -148,7 +149,7 @@ class ConsoleTerminal {
                         break;
                     case "print": // 'print [node keyContaining:int]'
 //                        if (st.hasMoreTokens() && st.nextToken().equals("node")) {} // optional to do
-
+                        System.out.println(BTreePrinter.doPrintAsString(bTree));
                         break;
                     case "stats": // 'stats'
 //                        bTree.dumpStatistics().toString();
