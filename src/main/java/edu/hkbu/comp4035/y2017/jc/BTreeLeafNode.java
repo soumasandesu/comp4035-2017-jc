@@ -33,9 +33,14 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
 
     @Override
     final boolean isSubItemsHungry() {
+        return isSubItemsHungry(0);
+    }
+    
+    @Override
+    final boolean isSubItemsHungry(int sizeAdd) {
         // Every node other than the root must have at least t - 1 keys.
         // ** Count of sub items of a leaf node == count of keys.
-        return getTree().getRootNode() != this && this.subItems.size() < t() - 1;
+        return getTree().getRootNode() != this && this.subItems.size()+sizeAdd < t() - 1;
     }
 
     public final BTreeLeafNode<V> getNextLeaf() {

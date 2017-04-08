@@ -207,6 +207,8 @@ abstract class BTreeNode<S> implements Serializable {
     abstract boolean isSubItemsFull();
 
     abstract boolean isSubItemsHungry();
+    
+    abstract boolean isSubItemsHungry(int sizeAdd);
 
     final int n() {
         return this.keys.size();

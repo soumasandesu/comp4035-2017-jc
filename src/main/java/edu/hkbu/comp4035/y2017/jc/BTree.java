@@ -129,8 +129,8 @@ public class BTree<VType> implements Serializable {
      * @return The current operating {@code BTree} object for further chain operation.
      */
     public BTree delete(int key) {
-        if (true) throw new UnsupportedOperationException("not yet implemented.");
-
+    	   BTreeDeleteOperations.doDelete(this, key);
+        
         return this; // chain operation like jQuery
     }
 

@@ -39,11 +39,68 @@ class BTreeDeleteOperations {
         //         merge
         //     while parent is not null
         //         check upper won't hungry
+    
+    	delete(bTree.getRootNode(),key);
+    	
     }
+
+    private static <V> void delete(BTreeNode x, int k) {
+        int i = x.n() - 1;
+        while (i > -1 && k < x.getKeyAt(i)) {
+            i--;
+        }
+        if (x.isLeaf()) {
+        	System.out.println("in leaf and delete ");
+        	//find and try to delete
+        
+        	
+        	x.removeSubItemValueAt(i);
+        	x.removeKeyAt(i);
+        	
+        	
+        } else {
+        	//not the leaf , find in deeper level
+        	System.out.println("not a leaf , go to deep....");
+            i++;
+            BTreeNode xc = (BTreeNode) x.getSubItemAt(i);
+            delete(xc, k);
+            checkHungryOrMerge((BTreeIndexNode)x,i);
+            
+            //check is index  =  deleted key
+        }
+        //delete may be success
+        //checkHungryOrMerge!
+           
+    }
+    
+    
 
     private static void checkHungryOrMerge(BTreeIndexNode indexNode, int pos) {
-
+    	if(indexNode.getSubItemAt(pos).isSubItemsHungry()){
+    		System.out.println("hungry!");
+    		
+    		if(pos+1<indexNode.getSubItems().size()){
+    			//check right won't hungry
+    			if(indexNode.getSubItemAt(pos+1).isSubItemsHungry(-1)){
+    				// borrow one from right
+    			}else{
+    				//merge
+    			}
+    		}
+            //     check right won't hungry
+            //         borrow one from right
+            //         write new index @ parent of borrowed
+            //     else
+            //         merge
+    			
+    	}else{
+    		System.out.println("not hungry!");
+    	}
     }
+   
+    
+  
+
 
     private static void merge(BTreeIndexNode indexNode, int posProcessing) {
 

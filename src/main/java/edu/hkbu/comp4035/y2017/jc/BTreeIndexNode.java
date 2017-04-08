@@ -30,7 +30,12 @@ public final class BTreeIndexNode extends BTreeNode<BTreeNode> {
 
     @Override
     final boolean isSubItemsHungry() {
+        return isSubItemsHungry(0);
+    }
+    
+    @Override
+    final boolean isSubItemsHungry(int sizeAdd) {
         // Every internal node other than the root thus has at least t children.
-        return getTree().getRootNode() != this && this.subItems.size() < t();
+        return getTree().getRootNode() != this && this.subItems.size()+sizeAdd < t();
     }
 }
