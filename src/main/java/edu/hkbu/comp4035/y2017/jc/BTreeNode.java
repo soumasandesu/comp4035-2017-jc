@@ -191,9 +191,16 @@ abstract class BTreeNode<S> implements Serializable {
         return tree;
     }
 
-    abstract boolean isKeysFull();
+    final boolean isKeysFull() {
+        // max deg of keys = 2t - 1
+        return n() >= 2 * t() - 1;
+    }
 
-    abstract boolean isKeysHungry();
+    final boolean isKeysHungry() {
+        // Every node other than the root must have at least t - 1 keys.
+        // min deg of keys = t - 1
+        return getTree().getRootNode() != this && n() < t() - 1;
+    }
 
     public abstract boolean isLeaf();
 
@@ -202,13 +209,32 @@ abstract class BTreeNode<S> implements Serializable {
     abstract boolean isSubItemsHungry();
 
     @SuppressWarnings("ConstantConditions")
-    final boolean isValid() {
-        boolean ok = true;
-        ok &= !this.isKeysFull();
-        ok &= !this.isKeysHungry();
-        ok &= !this.isSubItemsHungry();
-        ok &= !(this.keys.size() != this.subItems.size() + (isLeaf() ? 0 : 1));
-        return ok;
+    boolean isValid() {
+        if (this.isKeysFull()) {
+            System.out.printf("%s: keys full", Integer.toHexString(hashCode()));
+            return false;
+        }
+        if (this.isKeysHungry()) {
+            System.out.printf("%s: keys hungry", Integer.toHexString(hashCode()));
+            return false;
+        }
+        if (this.isSubItemsFull()) {
+            System.out.printf("%s: subitems full", Integer.toHexString(hashCode()));
+            return false;
+        }
+        if (this.isSubItemsHungry()) {
+            System.out.printf("%s: subitems hungry", Integer.toHexString(hashCode()));
+            return false;
+        }
+        if (this.isSubItemsHungry()) {
+            System.out.printf("%s: key subitems size not ok", Integer.toHexString(hashCode()), this.keys.size());
+            return false;
+        }
+        if (this.keysSize() != this.subItemsSize() + (isLeaf() ? 0 : 1)) {
+            System.out.printf("%s: key subitems size not ok (%d, %d)", Integer.toHexString(hashCode()), this.keysSize(), this.subItemsSize());
+            return false;
+        }
+        return true;
     }
 
     final int n() {
@@ -299,5 +325,21 @@ abstract class BTreeNode<S> implements Serializable {
 
     final int t() {
         return this.tree.getProperties().getDegree();
+    }
+
+    final int keysSize() {
+        return this.keys.size();
+    }
+
+    final int subItemsSize() {
+        return this.subItems.size();
+    }
+
+    final int usedSpace() {
+        return n();
+    }
+
+    final int totalSpace() {
+        return 2 * t() - 1;
     }
 }

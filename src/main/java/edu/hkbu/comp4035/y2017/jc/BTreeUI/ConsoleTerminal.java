@@ -148,8 +148,19 @@ class ConsoleTerminal {
                         bTree.search(key1, key2);
                         break;
                     case "print": // 'print [node keyContaining:int]'
-//                        if (st.hasMoreTokens() && st.nextToken().equals("node")) {} // optional to do
-                        System.out.println(BTreePrinter.doPrintAsString(bTree));
+                        if (st.countTokens() >= 2 && st.nextToken().equals("node")) {
+                            try {
+                                key1 = Integer.parseInt(st.nextToken());
+                            } catch (NumberFormatException ignored) {
+                                System.out.println("ERROR: keyContaining is not int");
+                                break;
+                            }
+                            bTree.printNode(System.out, key1);
+                        } else if (st.countTokens() == 0) {
+                            bTree.printTree(System.out);
+                        } else {
+                            System.out.println("Syntax: 'print [node keyContaining:int]'");
+                        }
                         break;
                     case "stats": // 'stats'
 //                        bTree.dumpStatistics().toString();
@@ -223,6 +234,19 @@ class ConsoleTerminal {
                     case "about": // 'about'
                         System.out.println(about());
                         break;
+                    case "debug":
+                        if (st.countTokens() < 1) {
+                            System.out.println("Syntax: 'debug [*]'");
+                            break;
+                        }
+                        switch (st.nextToken()) {
+                            case "break":
+                                System.out.println("Breaking on debugger side...");
+                                break;
+                            default:
+                                System.out.println("???");
+                        }
+                    case "exit":
                     case "quit": // 'quit'
                         System.out.println("Thanks! Bye-bye ｽﾞｲ₍₍(ง˘ω˘)ว⁾⁾ｽﾞｲ ");
                         System.exit(0);
@@ -236,6 +260,8 @@ class ConsoleTerminal {
                         msg += "    import filepath:string(mime=application/json)\n";
                         msg += "    export filepath:string\n";
                         msg += "    about\n";
+                        msg += "    debug\n";
+                        msg += "    exit\n";
                         msg += "    quit\n";
                         System.out.println(msg);
                 }

@@ -50,13 +50,12 @@ class BTreeInsertOperations {
         BTreeNode l = x.getSubItemAt(index);
         BTreeNode r = l.getEmptyClone();
         {
-            Collection l_rightHalfKeys = l.getKeys(l.t(), (l.t() * 2) - 1);
+            Collection l_rightHalfKeys = l.getKeys(l.t(), l.keysSize());
             r.addKeys(l_rightHalfKeys);
             l.removeKeys(l_rightHalfKeys);
         }
         {
-            int endPosExclusive = l.isLeaf() ? l.t() * 2 : l.t() * 2 + 1;
-            Collection l_rightHalfSubValues = l.getSubItems(l.t(), endPosExclusive - 1);
+            Collection l_rightHalfSubValues = l.getSubItems(l.t(), l.subItemsSize());
             r.addSubItemValues(l_rightHalfSubValues);
             l.removeSubItemsValues(l_rightHalfSubValues);
         }

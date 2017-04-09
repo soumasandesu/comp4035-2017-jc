@@ -77,11 +77,7 @@ public class BTree<VType> implements Serializable {
     }
 
     public int getHeight() {
-        int i = 0;
-        for (BTreeNode n = getRootNode(); !n.isLeaf(); n = ((BTreeIndexNode)n).getSubItemAt(0)) {
-            ++i;
-        }
-        return i;
+        return BTreeStatValidator.doMeasureHeight(this);
     }
 
     BTreeNode getRootNode() {
@@ -179,9 +175,8 @@ public class BTree<VType> implements Serializable {
      * @return An <i>immutable</i> B+ Tree statistics object which records the status of the B+ Tree on the moment.
      * @see <a href="http://stackoverflow.com/questions/279507/what-is-meant-by-immutable">java - What is meant by immutable? - Stack Overflow</a>
      */
-    public BTreeStatistics dumpStatistics() {
-        // TODO: return new BTreeStatistics(numberOfNodes, numberOfDataEntries, numberOfIndexEntries, averageFillFactor, height);
-        return null;
+    public BTreeStatValidator.Statistics dumpStatistics() {
+        return BTreeStatValidator.generate(this);
     }
 
     /**
@@ -190,15 +185,19 @@ public class BTree<VType> implements Serializable {
      * @param ps The {@code PrintStream} to be used as the destination of text output, for example, "{@code System.out}".
      */
     public void printTree(PrintStream ps) {
-        // TODO: ps.println(); // just like System.out.println();
+        ps.println(BTreePrinter.doPrintAsString(this));
     }
 
-    /*
-    // Optional
+    @SuppressWarnings("ConstantConditions")
     public void printNode(PrintStream ps, int nodeKey) {
-
+        BTreeSearchOperations.SearchNodeResult<VType> result = BTreeSearchOperations.doSearchNodeByKey(this, nodeKey, true);
+        BTreeNode parent = result == null ? null : result.getParentNode();
+        System.out.printf("Search Key: %d\n\nResult: %s\n\nParent Node: %s\n",
+                nodeKey,
+                result == null ? "null" : "\n" + BTreePrinter.doPrintNodeAsString(result.getDestinationNode()),
+                parent == null ? "null" : BTreePrinter.doPrintNodeFriendlyNameAsString(parent) + "@" +
+                        Integer.toHexString(parent.hashCode()) + ": " + BTreePrinter.doPrintNodeKeysAsString(parent));
     }
-    */
 
     public BTreeProperties getProperties() {
         return properties;

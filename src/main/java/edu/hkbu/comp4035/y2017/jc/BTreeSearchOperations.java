@@ -64,35 +64,53 @@ class BTreeSearchOperations {
         return ret;
     }
 
+    public static <T> SearchNodeResult<T> doSearchNodeByKey(BTree<T> bTree, int key, boolean exact) {
+        return searchNodeByKey(bTree.getRootNode(), key, null, exact);
+    }
+
     private static <T> SearchNodeResult<T> searchNodeByKey(BTreeNode node, int key) {
+        return searchNodeByKey(node, key, null, false);
+    }
+
+    private static <T> SearchNodeResult<T> searchNodeByKey(BTreeNode node, int key, BTreeNode parentNode, boolean exact) {
+        if (node.keysSize() == 0) {
+            return null;
+        }
+
         int i = 0;
         while (i < node.n() && key > node.getKeyAt(i)) {
             i++;
         }
 
         if (node.isLeaf()) {
-            // && key == node.getKeyAt(i)
-            if (i < node.n()) {
+            if (exact && key < node.getKeyAt(0)) {
+                return null;
+            } else if (i < node.n()) {
+                if (exact && key != node.getKeyAt(i)) {
+                    return null;
+                }
                 //noinspection unchecked
-                return new SearchNodeResult<>((BTreeLeafNode<T>) node, i);
+                return new SearchNodeResult<>((BTreeLeafNode<T>) node, i, parentNode);
             } else {
                 return null;
             }
         } else {
-            return searchNodeByKey((BTreeNode) node.getSubItemAt(i), key);
+            return searchNodeByKey((BTreeNode) node.getSubItemAt(i), key, node, exact);
         }
     }
 
     final static class SearchNodeResult<T> {
         private final BTreeLeafNode<T> destinationNode;
         private final int searchResultIndex;
+        private final BTreeNode parentNode;
 
-        SearchNodeResult(BTreeLeafNode<T> destinationNode, int searchResultIndex) {
+        SearchNodeResult(BTreeLeafNode<T> destinationNode, int searchResultIndex, BTreeNode parentNode) {
             if (destinationNode == null) {
                 throw new IllegalArgumentException("destination node cannot be null");
             }
             this.destinationNode = destinationNode;
             this.searchResultIndex = searchResultIndex;
+            this.parentNode = parentNode;
         }
 
         /**
@@ -106,6 +124,10 @@ class BTreeSearchOperations {
 
         BTreeLeafNode<T> getDestinationNode() {
             return destinationNode;
+        }
+
+        public BTreeNode getParentNode() {
+            return parentNode;
         }
     }
 

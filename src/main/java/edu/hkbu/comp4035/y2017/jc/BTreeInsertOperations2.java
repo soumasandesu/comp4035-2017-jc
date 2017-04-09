@@ -37,9 +37,11 @@ class BTreeInsertOperations2 {
             x.addSubItemValueAtBypass(i, v);
         } else {
             BTreeNode xc = (BTreeNode) x.getSubItemAt(i);
-            insertNonRoot(xc, k, v);
-            if (xc.isKeysFull()) {
+            if (xc.isSubItemsFull()) {
                 splitChild((BTreeIndexNode) x, i);
+                insertNonRoot(x, k, v); // re-calculate for choosing correct side
+            } else {
+                insertNonRoot(xc, k, v);
             }
         }
     }
@@ -48,20 +50,21 @@ class BTreeInsertOperations2 {
         BTreeNode l = x.getSubItemAt(index);
         BTreeNode r = l.getEmptyClone();
         {
-            Collection l_rightHalfKeys = l.getKeys(l.t(), (l.t() * 2));  // deep clone
+            //  - (l.isLeaf() ? 0 : 1)
+            Collection l_rightHalfKeys = l.getKeys(l.t(), l.keysSize());  // deep clone
             r.addKeys(l_rightHalfKeys);
             l.removeKeys(l_rightHalfKeys);
         }
         {
-            int endPosInclusive = l.isLeaf() ? l.t() * 2 : l.t() * 2 + 1;
-
-            Collection l_rightHalfSubValues = l.getSubItems(l.t(), endPosInclusive);  // deep clone
+            Collection l_rightHalfSubValues = l.getSubItems(l.t() + (l.isLeaf() ? 0 : 1), l.subItemsSize());  // deep clone
             r.addSubItemValues(l_rightHalfSubValues);
             l.removeSubItemsValues(l_rightHalfSubValues);
         }
         x.addSubItemValueAt(index + 1, r);
         x.addKeyAt(index, r.getKeyAt(0));
-        if (!r.isLeaf()) {
+        if (r.isLeaf()) {
+            ((BTreeLeafNode) l).setNextLeaf((BTreeLeafNode) r);
+        } else {
             r.removeKeyAt(0);
         }
     }

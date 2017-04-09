@@ -27,17 +27,6 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
         return new BTreeLeafNode<>(this.getTree());
     }
 
-    final boolean isKeysFull() {
-        // max deg of keys = 2t - 1
-        return n() >= 2 * t() - (getTree().getRootNode() == this ? 1 : 0);
-    }
-
-    final boolean isKeysHungry() {
-        // Every node other than the root must have at least t - 1 keys.
-        // min deg of keys = t - 1
-        return getTree().getRootNode() != this && n() < t() - (getTree().getRootNode() == this ? 1 : 0);
-    }
-
     final boolean isSubItemsFull() {
         return this.subItems.size() >= 2 * t() - 1;
     }
