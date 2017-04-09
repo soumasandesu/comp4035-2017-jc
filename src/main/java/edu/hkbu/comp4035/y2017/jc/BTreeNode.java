@@ -16,12 +16,12 @@ import java.util.List;
 //        @JsonSubTypes.Type(value = BTreeLeafNode.class, name = "BTreeLeafNode")
 //})
 abstract class BTreeNode<S> implements Serializable {
-//    @JsonIgnore
-    private final BTree tree;
-//    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
-    private final LinkedList<Integer> keys;
-//    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    //    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     final LinkedList<S> subItems;
+    //    @JsonIgnore
+    private final BTree tree;
+    //    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    private final LinkedList<Integer> keys;
 
     BTreeNode(BTree tree) {
         this.tree = tree;
@@ -33,14 +33,6 @@ abstract class BTreeNode<S> implements Serializable {
         this.tree = tree;
         this.keys = keys;
         this.subItems = subItems;
-    }
-
-    final boolean addSubItemValue(S s) {
-        boolean ok = !isSubItemsFull();
-        if (ok) {
-            ok = subItems.add(s);
-        }
-        return ok;
     }
 
     private boolean addKey(int key) {
@@ -79,6 +71,14 @@ abstract class BTreeNode<S> implements Serializable {
             if (!ok) return false;
         }
         return true;
+    }
+
+    final boolean addSubItemValue(S s) {
+        boolean ok = !isSubItemsFull();
+        if (ok) {
+            ok = subItems.add(s);
+        }
+        return ok;
     }
 
     final boolean addSubItemValueAt(int index, S s) {
@@ -191,22 +191,25 @@ abstract class BTreeNode<S> implements Serializable {
         return tree;
     }
 
-    final boolean isKeysFull() {
-        // max deg of keys = 2t - 1
-        return n() >= 2 * t() - 1;
-    }
+    abstract boolean isKeysFull();
 
-    private boolean isKeysHungry() {
-        // Every node other than the root must have at least t - 1 keys.
-        // min deg of keys = t - 1
-        return getTree().getRootNode() != this && n() < t() - 1;
-    }
+    abstract boolean isKeysHungry();
 
     public abstract boolean isLeaf();
 
     abstract boolean isSubItemsFull();
 
     abstract boolean isSubItemsHungry();
+
+    @SuppressWarnings("ConstantConditions")
+    final boolean isValid() {
+        boolean ok = true;
+        ok &= !this.isKeysFull();
+        ok &= !this.isKeysHungry();
+        ok &= !this.isSubItemsHungry();
+        ok &= !(this.keys.size() != this.subItems.size() + (isLeaf() ? 0 : 1));
+        return ok;
+    }
 
     final int n() {
         return this.keys.size();
@@ -288,7 +291,7 @@ abstract class BTreeNode<S> implements Serializable {
         boolean ok;
         for (Object o : arr) {
             //noinspection unchecked
-            ok = removeSubItemValue((S)o);
+            ok = removeSubItemValue((S) o);
             if (!ok) return false;
         }
         return true;
