@@ -113,7 +113,7 @@ public class BTree<VType> implements Serializable {
      */
     public BTree insert(int key, VType rid) {
         // P.S.: This statement might update the root due to the push/copy-up step during insertion.
-        BTreeInsertOperations.doInsert(this, key, rid);
+        BTreeInsertOperations2.doInsert(this, key, rid);
         return this; // chain operation like jQuery
     }
 
