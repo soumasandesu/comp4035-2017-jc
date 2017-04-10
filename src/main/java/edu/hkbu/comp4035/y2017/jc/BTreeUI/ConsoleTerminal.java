@@ -163,8 +163,7 @@ class ConsoleTerminal {
                         }
                         break;
                     case "stats": // 'stats'
-//                        bTree.dumpStatistics().toString();
-                        System.out.println("bTree.dumpStatistics().toString();"); // TODO: stats
+                        System.out.println(bTree.dumpStatistics().toString());
                         break;
                     case "import": // 'import filepath:string(mime=application/json)'
                         if (st.countTokens() < 1) {

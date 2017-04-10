@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Contains the instructions to print a B+ tree and/or its nodes.
+ */
 public class BTreePrinter {
     public static String doPrintAsString(BTree bTree) {
         return _printKeysAsString(bTree);

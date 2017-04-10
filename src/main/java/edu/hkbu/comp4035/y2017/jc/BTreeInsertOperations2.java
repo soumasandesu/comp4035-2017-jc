@@ -3,7 +3,19 @@ package edu.hkbu.comp4035.y2017.jc;
 import java.util.Collection;
 
 @SuppressWarnings({"Duplicates", "unchecked"})
+/**
+ * Contains the instructions to performs the insertion in a B+ tree.<br/>
+ * Note that this class simulates according to the "B+ tree visualisation" by University of San Francisco available on
+ * {@link https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html}.
+ */
 class BTreeInsertOperations2 {
+    /**
+     * Performs the insertion in a B+ tree.
+     * @param bTree The tree to insert.
+     * @param key The key to insert.
+     * @param value The value to insert.
+     * @param <V> The value type of B+ tree.
+     */
     static <V> void doInsert(BTree<V> bTree, int key, V value) {
         BTreeNode newRoot = insert(bTree.getRootNode(), key, value);
         bTree.setRootNode(newRoot);

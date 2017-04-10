@@ -4,12 +4,24 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
-
+/**
+ * Represents an index node in the B+ Tree.
+ */
 public final class BTreeIndexNode extends BTreeNode<BTreeNode> {
+    /**
+     * Creates an index node.
+     * @param tree The respective B+ tree.
+     */
     BTreeIndexNode(BTree tree) {
         super(tree);
     }
 
+    /**
+     * Creates an index node with pre-stored data.
+     * @param tree The respective B+ tree.
+     * @param keys The pre-stored keys.
+     * @param subItems The pre-stored sub-nodes.
+     */
     public BTreeIndexNode(BTree tree, LinkedList<Integer> keys, LinkedList<BTreeNode> subItems) {
         super(tree, keys, subItems);
     }

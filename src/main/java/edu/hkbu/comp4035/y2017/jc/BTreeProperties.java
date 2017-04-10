@@ -2,11 +2,11 @@ package edu.hkbu.comp4035.y2017.jc;
 
 import java.io.Serializable;
 
-/**
- * Store the information about the properties about the related BTree.
- */
 /*
    All of the properties should be immutable.
+ */
+/**
+ * Store the information about the properties about the related BTree.
  */
 public final class BTreeProperties implements Serializable {
     // TODO: obj ref to the root

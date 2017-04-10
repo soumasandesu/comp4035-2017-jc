@@ -99,7 +99,7 @@ public class BTreeStatValidator {
     }
 
     // IMMUTABLE
-    static class Statistics {
+    public static class Statistics {
         private final int nodesCount;
         private final int dataEntriesCount;
         private final int indexEntriesCount;
