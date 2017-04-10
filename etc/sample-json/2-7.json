@@ -1,0 +1,40 @@
+
+  "valueType": "java.lang.String",
+  "properties": {
+    "degree": 3
+  },
+  "rootNode": {
+    "leaf": false,
+    "keys": [
+      5
+    ],
+    "subItems": [
+      {
+        "leaf": true,
+        "keys": [
+          2,
+          3,
+          4
+        ],
+        "subItems": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          5,
+          6,
+          7
+        ],
+        "subItems": [
+          null,
+          null,
+          null
+        ]
+      }
+    ]
+  }
+}

@@ -8,7 +8,7 @@ import java.util.Collection;
 
 // TODO: Javadoc for class BTree
 public class BTree<VType> implements Serializable {
-    private Class<VType> valueType; // TODO: final
+    private final Class<VType> valueType;
     // Note: you cannot confirm what key type will be before completion of invoking ctor.
     private BTreeNode rootNode;
     private BTreeProperties properties;
@@ -47,16 +47,16 @@ public class BTree<VType> implements Serializable {
     }
 
     /**
-     * The destructor of BTree just "closes" the index. THis includes de-allocating
+     * The destructor of BTree just "closes" the index. This includes de-allocating
      * the memory space for the index. Note that it does not delete the file.
      */
-    // TODO: This method is not guaranteed to be invoked by the GC.
-    // TODO: Use try-finally if possible
+    // TO DO: This method is not guaranteed to be invoked by the GC.
+    // TO DO: Use try-finally if possible
     // See: http://stackoverflow.com/questions/171952/is-there-a-destructor-for-java
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        super.finalize();
+//    }
 
     /**
      * Takes in a filename, and checks if a file with that name already exists.

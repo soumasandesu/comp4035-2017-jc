@@ -10,6 +10,13 @@ class BTreeSearchOperations {
      not found, it returns nothing. <i><b>Be careful with the duplicate keys that span over multiple pages.</b></i>
      */
 
+    /**
+     * Perform search operation on a B+ tree.
+     * @param bTree The B+ tree to search.
+     * @param key The key to find from the {@code bTree}.
+     * @param <T> The value type of B+ tree.
+     * @return The value of {@key} stored in the B+ tree, or null if not found.
+     */
     static <T> T doSearch(BTree<T> bTree, int key) {
         SearchNodeResult<T> searchResult = searchNodeByKey(bTree.getRootNode(), key);
         //noinspection ConstantConditions
@@ -64,6 +71,14 @@ class BTreeSearchOperations {
         return ret;
     }
 
+    /**
+     * Perform search operation on a B+ tree.
+     * @param bTree The B+ tree to search.
+     * @param key The key to find from the {@code bTree}.
+     * @param <T> The value type of B+ tree.
+     * @param exact Whether if the exact search should be performed.
+     * @return The search result of value of {@key} stored in the B+ tree.
+     */
     public static <T> SearchNodeResult<T> doSearchNodeByKey(BTree<T> bTree, int key, boolean exact) {
         return searchNodeByKey(bTree.getRootNode(), key, null, exact);
     }
@@ -99,6 +114,10 @@ class BTreeSearchOperations {
         }
     }
 
+    /**
+     * Represents the search result of a key in node in B+ tree.
+     * @param <T> The value type of B+ tree.
+     */
     final static class SearchNodeResult<T> {
         private final BTreeLeafNode<T> destinationNode;
         private final int searchResultIndex;
@@ -115,17 +134,24 @@ class BTreeSearchOperations {
 
         /**
          * Get the index of the value that possible be equal or (if not match), larger than the desired value.
-         *
          * @return The index (>=).
          */
         int getSearchResultIndex() {
             return searchResultIndex;
         }
 
+        /**
+         * Get the destination of leaf node to search in B+ tree.
+         * @return The node.
+         */
         BTreeLeafNode<T> getDestinationNode() {
             return destinationNode;
         }
 
+        /**
+         * Get the father of the destination of leaf node to search in B+ tree.
+         * @return The father node.
+         */
         public BTreeNode getParentNode() {
             return parentNode;
         }

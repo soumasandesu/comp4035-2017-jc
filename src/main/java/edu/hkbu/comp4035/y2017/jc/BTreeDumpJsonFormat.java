@@ -9,14 +9,29 @@ import java.util.stream.Collectors;
 
 // Note: Classes and methods (if not static) are **final** to make sure that they won't be extended or being overriden.
 
+/**
+ * Contains the instructions to import/export JSON file from/to a B+ tree.
+ */
 final class BTreeDumpJsonFormat {
-    private static Gson gson = new Gson();
-    private static Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static JsonParser parser = new JsonParser();
 
     // import
+
+    /**
+     * The parser instructions to import a JSON file to become a B+ tree.
+     */
     static final class Parse {
-        static BTree toBTree(String content) throws IOException, ClassNotFoundException {
+        /**
+         * Parse a JSON context as a B+ Tree.
+         * @param content The JSON context as {@code String}.
+         * @return The B+ tree.
+         * @throws com.google.gson.JsonSyntaxException If the syntax of {@code content} is illegal.
+         * @throws IOException If a node cannot be generated. See stack traces.
+         * @throws ClassNotFoundException If the value type of B+ tree specified in JSON context cannot be found
+         * to create.
+         */
+        static BTree toBTree(String content) throws com.google.gson.JsonSyntaxException, IOException, ClassNotFoundException {
             JsonObject jo = parser.parse(content).getAsJsonObject();
 
             Class<?> valueType = Class.forName(jo.get("valueType").getAsString());
@@ -86,7 +101,15 @@ final class BTreeDumpJsonFormat {
     }
 
     // export
+    /**
+     * The string-fy instructions to export a JSON file from a B+ tree.
+     */
     static final class Stringfy {
+        /**
+         * String-fies a B+ tree as JSON.
+         * @param bTree The B+ tree.
+         * @return The JSON representing a B+ tree of {@code bTree}.
+         */
         static String fromBTree(BTree bTree) {
             String strValueType = gson.toJson(bTree.getValueType().getName());
             String strProperties = gson.toJson(bTree.getProperties());
@@ -121,9 +144,17 @@ final class BTreeDumpJsonFormat {
         }
     }
 
+    /**
+     * Prettifies a JSON context.
+     */
     private static class Prettify {
+        /**
+         * Prettifies a JSON context.
+         * @param json The JSON context to beautify.
+         * @return The prettified JSON context.
+         */
         static String fromJsonString(String json) {
-            return gsonPretty.toJson(parser.parse(json).getAsJsonObject());
+            return gson.toJson(parser.parse(json).getAsJsonObject());
         }
     }
 }
