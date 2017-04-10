@@ -86,11 +86,11 @@ class ConsoleTerminal {
 
                 int key1;
                 int key2;
-
+                int num;
                 // why not just parse commands by argparse :o) -- charles
                 // and why not generalise -- switch-case is bad idea
                 switch (cmd) {
-                    case "insert": // 'insert key1:int value:*'
+                    /*case "insert": // 'insert key1:int value:*'
                         if (st.countTokens() < 1) {
                             System.out.println("Syntax: 'insert key:int value:*'");
                             break;
@@ -105,6 +105,20 @@ class ConsoleTerminal {
                         bTree.insert(key1, null);
                         System.out.println("OK");
                         break;
+                        */
+                	case "insert":
+                		 if (st.countTokens() < 3) {
+                             System.out.println("Syntax: 'insert <low> <high> <num>'");
+                             break;
+                         }
+                		key1 = Integer.parseInt(st.nextToken());
+                		key2 = Integer.parseInt(st.nextToken());
+                		num = Integer.parseInt(st.nextToken());
+                		java.util.Random ran = new java.util.Random();
+                		for(int i = 0;i<num;i++){
+                			bTree.insert(ran.nextInt(key2-key1+1)+key1, null);
+                		}
+                		break;
                     case "delete": // 'delete key1:int'
                         if (st.countTokens() < 1) {
                             System.out.println("Syntax: 'delete key:int'");

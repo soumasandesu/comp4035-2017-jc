@@ -45,28 +45,48 @@ class BTreeDeleteOperations {
     }
 
     private static <V> void delete(BTreeNode x, int k) {
-        int i = x.n() - 1;
+        int i = x.n() - 1; //key size - -1
         while (i > -1 && k < x.getKeyAt(i)) {
             i--;
         }
+       
         if (x.isLeaf()) {
         	System.out.println("in leaf and delete ");
-        	//find and try to delete
-        
         	
-        	x.removeSubItemValueAt(i);
-        	x.removeKeyAt(i);
+        
+        	if(x.getKeyAt(i)==k){ 
+        		//find and try to delete       	
+	        	x.removeSubItemValueAt(i);
+	        	x.removeKeyAt(i);
+        	}else{
+        		//not find
+        		//return null
+        		System.out.println("not find");
+        	}
         	
         	
         } else {
         	//not the leaf , find in deeper level
         	System.out.println("not a leaf , go to deep....");
+        	
+        	//check the index key and the delete key
+        	
+        	if(i>-1 && x.getKeyAt(i)==k){
+               System.out.println("index key same as delete key");
+               if(((BTreeNode)x.getSubItemAt(i+1)).getKeys().size()>1){
+            	   System.out.println("reset key");
+	                x.removeKeyAt(i);
+	                x.addKeyAt(i,  ((BTreeNode)x.getSubItemAt(i+1)).getKeyAt(1));
+               }
+               
+            }
+        	
             i++;
             BTreeNode xc = (BTreeNode) x.getSubItemAt(i);
             delete(xc, k);
             checkHungryOrMerge((BTreeIndexNode)x,i);
             
-            //check is index  =  deleted key
+           
         }
         //delete may be success
         //checkHungryOrMerge!
@@ -78,28 +98,72 @@ class BTreeDeleteOperations {
     private static void checkHungryOrMerge(BTreeIndexNode indexNode, int pos) {
     	if(indexNode.getSubItemAt(pos).isSubItemsHungry()){
     		System.out.println("hungry!");
-    		
-    		if(pos+1<indexNode.getSubItems().size()){
-    			//check right won't hungry
-    			if(indexNode.getSubItemAt(pos+1).isSubItemsHungry(-1)){
+    		// Try to re-distribute, borrowing from sibling - right silbling
+    		if(pos+1<indexNode.getSubItems().size()){//have right?
+    			System.out.println("check right won't hungry....");
+    			BTreeNode SliblingNode = indexNode.getSubItemAt(pos+1);
+    			if(!SliblingNode.isSubItemsHungry(-1)){//check right won't hungry
+    				System.out.println("borrow one from right....");
     				// borrow one from right
+    				BTreeNode b = indexNode.getSubItemAt(pos);
+    				
+    				int insertIndex  = b.getSubItems().size();//last index 
+    				b.addKeyAt(insertIndex, SliblingNode.getKeyAt(0));
+    				b.addSubItemValueAt(insertIndex, SliblingNode.getSubItemAt(0));
+    				
+    				SliblingNode.removeKeyAt(0);
+    				SliblingNode.removeSubItemValueAt(0);
+    				
+    				// write new index @ parent of borrowed
+    				indexNode.removeKeyAt(pos);
+    				indexNode.addKeyAt(pos, SliblingNode.getKeyAt(0));
     			}else{
-    				//merge
+    				//merge right
+    				//Merge leaf nodes?
+    				//Merge Index nodes?
+    				System.out.println("merge right....");
+    				indexNode.getSubItemAt(pos).addKeys((indexNode.getSubItemAt(pos+1)).getKeys());
+    				indexNode.getSubItemAt(pos).addSubItemValues((indexNode.getSubItemAt(pos+1)).getSubItems());
+    				indexNode.removeSubItemValueAt(pos+1);
+    				indexNode.removeKeyAt(pos);
+    			}
+    		}else{//do not have right
+    			//try borrow form left , check left won't hungry
+    			System.out.println("check left won't hungry....");
+    			BTreeNode SliblingNode = indexNode.getSubItemAt(pos-1);
+    			if(!SliblingNode.isSubItemsHungry(-1)){//check right won't hungry
+    				System.out.println("borrow one from left....");
+    				// borrow one from left
+    				BTreeNode b = indexNode.getSubItemAt(pos);
+    				
+    				int insertIndex  = 0;//first index 
+    				int borrowIndex = SliblingNode.getSubItems().size()-1;
+    				b.addKeyAt(insertIndex, SliblingNode.getKeyAt(borrowIndex));
+    				b.addSubItemValueAt(insertIndex, SliblingNode.getSubItemAt(borrowIndex));
+    				
+    			
+    				
+    				// write new index @ parent of borrowed
+    				SliblingNode.removeKeyAt(borrowIndex);
+    				SliblingNode.removeSubItemValueAt(borrowIndex);
+    				
+    				indexNode.removeKeyAt(pos-1);
+    				indexNode.addKeyAt(pos-1, b.getKeyAt(0));
+    			}else{
+    				System.out.println("merge left....");
+    				indexNode.getSubItemAt(pos-1).addKeys((indexNode.getSubItemAt(pos)).getKeys());
+    				indexNode.getSubItemAt(pos-1).addSubItemValues((indexNode.getSubItemAt(pos)).getSubItems());
+    				indexNode.removeSubItemValueAt(pos);
+    				indexNode.removeKeyAt(pos-1);
     			}
     		}
-            //     check right won't hungry
-            //         borrow one from right
-            //         write new index @ parent of borrowed
-            //     else
-            //         merge
-    			
+       
     	}else{
     		System.out.println("not hungry!");
     	}
     }
    
     
-  
 
 
     private static void merge(BTreeIndexNode indexNode, int posProcessing) {
