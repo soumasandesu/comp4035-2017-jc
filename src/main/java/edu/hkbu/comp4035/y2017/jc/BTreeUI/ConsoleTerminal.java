@@ -70,6 +70,7 @@ class ConsoleTerminal {
             }
         }
 
+        System.out.println("Type 'help' to see commands syntax.");
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("Waiting for your commands:");
 
@@ -100,7 +101,9 @@ class ConsoleTerminal {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
+                        System.out.printf("Inserting %d=%s...", key1, "null");
                         bTree.insert(key1, null);
+                        System.out.println("OK");
                         break;
                     case "delete": // 'delete key1:int'
                         if (st.countTokens() < 1) {
@@ -113,7 +116,9 @@ class ConsoleTerminal {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
+                        System.out.printf("Inserting %d...", key1);
                         bTree.delete(key1);
+                        System.out.println("OK");
                         break;
                     case "search": // 'search keyLow:int [keyUp:int]'
                         if (st.countTokens() < 1) {
@@ -145,6 +150,7 @@ class ConsoleTerminal {
                             key2 = i;
                         }
 
+                        System.out.printf("Searching keys between %d <-> %d...\n", key1, key2);
                         bTree.search(key1, key2);
                         break;
                     case "print": // 'print [node keyContaining:int]'
@@ -171,6 +177,7 @@ class ConsoleTerminal {
                             break;
                         }
                         File file = new File(st.nextToken());
+                        System.out.printf("Import JSON from '%s'...\n", file.getPath());
                         if (!file.exists()) {
                             System.out.println(String.format("File on path \"%s\" does not exist!", file.getPath()));
                             break;
@@ -183,7 +190,7 @@ class ConsoleTerminal {
                         }
                         BTree newBTree;
                         try {
-                            newBTree = BTree.importJsonFromFilePath(file.getPath());
+                            newBTree = newBTreeFromJsonFilePath(file.getPath());
                         } catch (Exception e) {
                             System.out.println(String.format("Read file error: %s", e.getMessage()));
                             e.printStackTrace();
@@ -249,7 +256,7 @@ class ConsoleTerminal {
                     case "quit": // 'quit'
                         System.out.println("Thanks! Bye-bye ｽﾞｲ₍₍(ง˘ω˘)ว⁾⁾ｽﾞｲ ");
                         System.exit(0);
-                    default:
+                    case "help":
                         String msg = "Syntax: \n";
                         msg += "    insert key:int value:*\n";
                         msg += "    delete key:int\n";
@@ -262,6 +269,7 @@ class ConsoleTerminal {
                         msg += "    debug\n";
                         msg += "    exit\n";
                         msg += "    quit\n";
+                        msg += "    help\n";
                         System.out.println(msg);
                 }
             }
