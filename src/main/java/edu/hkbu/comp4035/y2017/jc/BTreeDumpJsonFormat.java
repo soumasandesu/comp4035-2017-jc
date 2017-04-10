@@ -43,8 +43,8 @@ final class BTreeDumpJsonFormat {
         }
 
         private static BTreeIndexNode toIndexNode(BTree tree, JsonObject jo, Class<?> leafNodeValueType) throws IOException {
-            boolean leaf = false;
-            LinkedList keys = gson.fromJson(jo.get("keys").getAsJsonArray(), LinkedList.class);
+            LinkedList<Integer> keys = new LinkedList<>();
+            jo.get("keys").getAsJsonArray().forEach(e -> keys.add(e.getAsInt()));
             LinkedList<BTreeNode> subItems = new LinkedList<>();
             for (JsonElement e : jo.get("subItems").getAsJsonArray()) {
                 subItems.add(toNode(tree, e.getAsJsonObject(), leafNodeValueType));
@@ -54,8 +54,8 @@ final class BTreeDumpJsonFormat {
         }
 
         private static <LeafNodeValType> BTreeLeafNode<LeafNodeValType> toLeafNode(BTree tree, JsonObject jo, Class<LeafNodeValType> leafNodeValueType) throws IOException {
-            boolean leaf = true;
-            LinkedList keys = gson.fromJson(jo.get("keys").getAsJsonArray(), LinkedList.class);
+            LinkedList<Integer> keys = new LinkedList<>();
+            jo.get("keys").getAsJsonArray().forEach(e -> keys.add(e.getAsInt()));
             LinkedList<LeafNodeValType> subItems = new LinkedList<>();
             for (JsonElement e : jo.get("subItems").getAsJsonArray()) {
                 subItems.add(gson.fromJson(e, leafNodeValueType));
