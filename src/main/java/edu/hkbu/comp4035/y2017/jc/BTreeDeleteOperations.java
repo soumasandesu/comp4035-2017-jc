@@ -59,7 +59,7 @@ class BTreeDeleteOperations {
         }
        
         if (x.isLeaf()) {
-        	System.out.println("in leaf and delete ");
+        	//System.out.println("in leaf and delete ");
         	
         
         	if(x.getKeyAt(i)==k){ 
@@ -69,20 +69,20 @@ class BTreeDeleteOperations {
         	}else{
         		//not find
         		//return null
-        		System.out.println("not find");
+        		//System.out.println("not find");
         	}
         	
         	
         } else {
         	//not the leaf , find in deeper level
-        	System.out.println("not a leaf , go to deep....");
+        	//System.out.println("not a leaf , go to deep....");
         	
         	//check the index key and the delete key
         	
         	if(i>-1 && x.getKeyAt(i)==k){
-               System.out.println("index key same as delete key");
+               //System.out.println("index key same as delete key");
                if(((BTreeNode)x.getSubItemAt(i+1)).getKeys().size()>1){
-            	   System.out.println("reset key");
+            	   //System.out.println("reset key");
 	                x.removeKeyAt(i);
 	                x.addKeyAt(i,  ((BTreeNode)x.getSubItemAt(i+1)).getKeyAt(1));
                }
@@ -94,7 +94,7 @@ class BTreeDeleteOperations {
             delete(xc, k);
             checkHungryOrMerge((BTreeIndexNode)x,i);
             if(x.getTree().getRootNode()==x && x.keysSize()==0){
-            	System.out.println("root is empty");
+            	//System.out.println("root is empty");
             	x.getTree().setRootNode((BTreeNode)x.getSubItemAt(0));
             }
             
@@ -111,25 +111,25 @@ class BTreeDeleteOperations {
     //Leaf Re-distribution
     private static void checkHungryOrMerge(BTreeIndexNode indexNode, int pos) {
         if(indexNode.getSubItemAt(pos).isSubItemsHungry()){
-    		System.out.println("hungry!");
+    		//System.out.println("hungry!");
 	    	if(indexNode.getSubItemAt(pos).isLeaf())
 	    		LeafReDistribution(indexNode,pos);
 	   		else
 	   			NonLeafReDistribution(indexNode,pos);
     	}else{
-    		System.out.println("not hungry!");
+    		//System.out.println("not hungry!");
     	}
     }
     
     private static void LeafReDistribution(BTreeIndexNode indexNode, int pos) {
-    	System.out.println("Leaf Re-Distribution");
+    	//System.out.println("Leaf Re-Distribution");
     	// Try to re-distribute, borrowing from sibling - right silbling
-		System.out.println((pos+1) +" - "+ indexNode.getSubItems().size());
+		//System.out.println((pos+1) +" - "+ indexNode.getSubItems().size());
 		if(pos+1<indexNode.getSubItems().size()){//have right?
-			System.out.println("check right won't hungry....");
+			//System.out.println("check right won't hungry....");
 			BTreeNode SliblingNode = indexNode.getSubItemAt(pos+1);
 			if(!SliblingNode.isSubItemsHungry(-1)){//check right won't hungry
-				System.out.println("borrow one from right....");
+				//System.out.println("borrow one from right....");
 				// borrow one from right
 				BTreeNode b = indexNode.getSubItemAt(pos);
 				int insertIndex  = b.getSubItems().size();//last index 
@@ -146,7 +146,7 @@ class BTreeDeleteOperations {
 				//merge right
 				//Merge leaf nodes?
 				//Merge Index nodes?
-				System.out.println("merge right....");
+				//System.out.println("merge right....");
 				indexNode.getSubItemAt(pos).addKeys((indexNode.getSubItemAt(pos+1)).getKeys());
 				indexNode.getSubItemAt(pos).addSubItemValues((indexNode.getSubItemAt(pos+1)).getSubItems());
 				indexNode.removeSubItemValueAt(pos+1);
@@ -154,10 +154,10 @@ class BTreeDeleteOperations {
 			}
 		}else{//do not have right
 			//try borrow form left , check left won't hungry
-			System.out.println("check left won't hungry....");
+			//System.out.println("check left won't hungry....");
 			BTreeNode SliblingNode = indexNode.getSubItemAt(pos-1);
 			if(!SliblingNode.isSubItemsHungry(-1)){//check left won't hungry
-				System.out.println("borrow one from left....");
+				//System.out.println("borrow one from left....");
 				// borrow one from left
 				BTreeNode b = indexNode.getSubItemAt(pos);
 				
@@ -172,7 +172,7 @@ class BTreeDeleteOperations {
 				indexNode.removeKeyAt(pos-1);
 				indexNode.addKeyAt(pos-1, b.getKeyAt(0));
 			}else{
-				System.out.println("merge left....");
+				//System.out.println("merge left....");
 				indexNode.getSubItemAt(pos-1).addKeys((indexNode.getSubItemAt(pos)).getKeys());
 				indexNode.getSubItemAt(pos-1).addSubItemValues((indexNode.getSubItemAt(pos)).getSubItems());
 				indexNode.removeSubItemValueAt(pos);
@@ -182,11 +182,11 @@ class BTreeDeleteOperations {
     }
     
     private static void NonLeafReDistribution(BTreeIndexNode indexNode, int pos) {
-    	System.out.println("Non Leaf Re-Distribution");
+    	//System.out.println("Non Leaf Re-Distribution");
     	if(pos+1<indexNode.getSubItems().size()){//have right?
     		BTreeNode SliblingNode = indexNode.getSubItemAt(pos+1);
 			if(!SliblingNode.isSubItemsHungry(-1)){//check right won't hungry
-				System.out.println("borrow one from right....");
+				//System.out.println("borrow one from right....");
 				// borrow one from right
 				BTreeNode b = indexNode.getSubItemAt(pos);//hungry node
 				int insertIndex  = b.getSubItems().size()-1;//last index 
@@ -209,10 +209,10 @@ class BTreeDeleteOperations {
 				indexNode.removeKeyAt(pos);
 			}
     	}else{//left
-    		System.out.println("check left won't hungry....");
+    		//System.out.println("check left won't hungry....");
 			BTreeNode SliblingNode = indexNode.getSubItemAt(pos-1);
     		if(!SliblingNode.isSubItemsHungry(-1)){//check left won't hungry
-    			System.out.println("borrow one from left....");
+    			////System.out.println("borrow one from left....");
 				// borrow one from left
 				BTreeNode b = indexNode.getSubItemAt(pos);//hungry node
 				

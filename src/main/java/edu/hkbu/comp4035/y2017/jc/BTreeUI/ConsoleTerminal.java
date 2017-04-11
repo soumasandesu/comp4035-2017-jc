@@ -133,7 +133,7 @@ class ConsoleTerminal {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
-                        System.out.printf("Deleteing %d...", key1);
+                        System.out.printf("Deleteing [%d , %d]...", key1,key2);
                         bTree.delete(key1,key2);
                         System.out.println("OK");
                         break;
