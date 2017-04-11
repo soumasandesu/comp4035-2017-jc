@@ -318,7 +318,7 @@ class ConsoleTerminal {
                         msg += "    import filepath:string(mime=application/json)\n";
                         msg += "    export filepath:string\n";
                         msg += "    about\n";
-                        msg += "    debug\n";
+                        msg += "    debug [validate|stop|break]\n";
                         msg += "    exit\n";
                         msg += "    quit\n";
                         msg += "    help\n";

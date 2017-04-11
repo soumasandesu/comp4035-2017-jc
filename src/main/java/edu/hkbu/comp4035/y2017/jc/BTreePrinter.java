@@ -65,7 +65,7 @@ public class BTreePrinter {
             //noinspection unchecked
             subItems = String.format(subItems, node.getSubItems().stream()
                     .map(n -> n == null ? "null" : n.toString())
-                    .collect(Collectors.joining(",")));
+                    .collect(Collectors.joining(",\n ")));
         } else {
             subItems = String.format(subItems, ((BTreeIndexNode)node).getSubItems().stream()
                     .map(BTreePrinter::doPrintNodeKeysAsString)
