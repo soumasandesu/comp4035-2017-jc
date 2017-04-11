@@ -110,7 +110,7 @@ class ConsoleTerminal {
                         */
                     case "insert":
                         if (st.countTokens() < 1) {
-                            System.out.println("Syntax: 'insert <low> <high> <num>'");
+                            System.out.println("Syntax: 'insert low:int [high:int count:int]'");
                             break;
                         }
                             boolean insertRand = false;
@@ -127,10 +127,13 @@ class ConsoleTerminal {
                                     bTree.insert(nextRand, null);
                                 }
                                 System.out.println("OK");
-                            } else {
+                            } else if (st.countTokens() == 0) {
                                 System.out.printf("Inserting %d = null... ", key1);
                                 bTree.insert(key1, null);
                                 System.out.println("OK");
+                            } else {
+                                System.out.println("Syntax: 'insert low:int [high:int count:int]'");
+                                break;
                             }
                         } catch (NumberFormatException ignored) {
                             System.out.println("ERROR: key is not int");
@@ -138,20 +141,25 @@ class ConsoleTerminal {
                         }
                         break;
                     case "delete": // 'delete key1:int'
-                        if (st.countTokens() < 2) {
-                            System.out.println("Syntax: 'delete <low> <high>'");
+                        if (st.countTokens() < 1) {
+                            System.out.println("Syntax: 'delete low:int [high:int]'");
                             break;
                         }
                         try {
                             key1 = Integer.parseInt(st.nextToken());
-                            key2 = Integer.parseInt(st.nextToken());
+                            if (st.hasMoreTokens()) {
+                                key2 = Integer.parseInt(st.nextToken());
+                                System.out.printf("Deleteing [%d , %d]...", key1, key2);
+                                bTree.delete(key1, key2);
+                            } else {
+                                System.out.printf("Deleteing %d...", key1);
+                                bTree.delete(key1);
+                            }
+                            System.out.println("OK");
                         } catch (NumberFormatException ignored) {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
-                        System.out.printf("Deleteing [%d , %d]...", key1, key2);
-                        bTree.delete(key1, key2);
-                        System.out.println("OK");
                         break;
                     case "search": // 'search keyLow:int [keyUp:int]'
                         if (st.countTokens() < 1) {
@@ -302,8 +310,8 @@ class ConsoleTerminal {
                         break;
                     case "help":
                         String msg = "Syntax: \n";
-                        msg += "    insert key:int value:*\n";
-                        msg += "    delete key:int\n";
+                        msg += "    insert low:int [high:int count:int]\n";
+                        msg += "    delete low:int [high:int]\n";
                         msg += "    search keyLow:int [keyUp:int]\n";
                         msg += "    print [node keyContaining:int]\n";
                         msg += "    stats\n";
@@ -325,8 +333,19 @@ class ConsoleTerminal {
 
     private static String about() {
         String msg = "";
-        msg += "==========About==========\n";
-        msg += "=========================\n";
+        msg += "+==========About==========+\n";
+        msg += "|                         |\n";
+        msg += "|    B+ Tree Simulation   |\n";
+        msg += "|                         |\n";
+        msg += "|  Assignment of COMP4035 |\n";
+        msg += "|   DB System Impl, HKBU  |\n";
+        msg += "|-------------------------|\n";
+        msg += "|      Tung Chun Fai      |\n";
+        msg += "|      Poon Chun Yiu      |\n";
+        msg += "|                         |\n";
+        msg += "|        Apr 2017         |\n";
+        msg += "|                         |\n";
+        msg += "+=========================+\n";
         return msg;
     }
 

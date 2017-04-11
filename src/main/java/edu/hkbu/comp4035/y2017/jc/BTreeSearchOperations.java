@@ -52,8 +52,13 @@ class BTreeSearchOperations {
                 ret.add(node.getKeyAt(idx));
             }
 
+            if (++idx >= node.n()) {
+                idx = 0;
+                node = node.getNextLeaf();
+            }
+
             // between key1 and key2
-            for (++idx; node != null && node.getKeyAt(idx) < key2;) {
+            for (; node != null && idx < node.keysSize() && node.getKeyAt(idx) <= key2;) {
                 ret.add(node.getKeyAt(idx));
 
                 if (++idx >= node.n()) {
@@ -63,8 +68,8 @@ class BTreeSearchOperations {
             }
 
             // == key2
-            if (inclusive && key2 == node.getKeyAt(idx)) {
-                ret.add(node.getKeyAt(idx));
+            if (!inclusive) {
+                ret.removeLast();
             }
         }
 
@@ -93,17 +98,15 @@ class BTreeSearchOperations {
         }
 
         int i = 0;
-        while (i < node.n() && key > node.getKeyAt(i)) {
+        while (i < node.n() && key >= node.getKeyAt(i)) {
             i++;
         }
 
         if (node.isLeaf()) {
+            i--;
             if (exact && key != node.getKeyAt(i)) {
                 return null;
             } else if (i < node.n()) {
-                if (exact && key != node.getKeyAt(i)) {
-                    return null;
-                }
                 //noinspection unchecked
                 return new SearchNodeResult<>((BTreeLeafNode<T>) node, i, parentNode);
             } else {
