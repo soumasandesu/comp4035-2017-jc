@@ -137,11 +137,11 @@ public class BTreeStatValidator {
         @Override
         public String toString() {
             String msg = "";
-            msg += "Statistics of the B+-tree:";
-            msg += "    Total number of nodes: %d";
-            msg += "    Total number of data entries: %d";
-            msg += "    Total number of index entries: %d";
-            msg += "    Average fill factor of leaf nodes: %d%%";
+            msg += "Statistics of the B+-tree:\n";
+            msg += "    Total number of nodes: %d\n";
+            msg += "    Total number of data entries: %d\n";
+            msg += "    Total number of index entries: %d\n";
+            msg += "    Average fill factor of leaf nodes: %.2f%%\n";
             msg += "    Height of tree: %d";
             return String.format(msg,
                     getNodesCount(),

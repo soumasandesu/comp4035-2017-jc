@@ -30,16 +30,16 @@ class BTreeSearchOperations {
         return null;
     }
 
-    static <T> Collection<T> doRangeSearchInclusive(BTree<T> bTree, int key1, int key2) {
+    static <T> Collection<Integer> doRangeSearchInclusive(BTree<T> bTree, int key1, int key2) {
         return doRangeSearch(bTree, key1, key2, true);
     }
 
-    static <T> Collection<T> doRangeSearchExclusive(BTree<T> bTree, int key1, int key2) {
+    static <T> Collection<Integer> doRangeSearchExclusive(BTree<T> bTree, int key1, int key2) {
         return doRangeSearch(bTree, key1, key2, false);
     }
 
-    private static <T> Collection<T> doRangeSearch(BTree<T> bTree, int key1, int key2, boolean inclusive) {
-        LinkedList<T> ret = new LinkedList<>();
+    private static <T> Collection<Integer> doRangeSearch(BTree<T> bTree, int key1, int key2, boolean inclusive) {
+        LinkedList<Integer> ret = new LinkedList<>();
 
         SearchNodeResult<T> dataStart = searchNodeByKey(bTree.getRootNode(), key1);
         {
@@ -49,12 +49,12 @@ class BTreeSearchOperations {
 
             // == key1
             if (inclusive && key1 == node.getKeyAt(idx)) {
-                ret.add(node.getSubItemAt(idx));
+                ret.add(node.getKeyAt(idx));
             }
 
             // between key1 and key2
-            for (++idx; node.getKeyAt(idx) < key2;) {
-                ret.add(node.getSubItemAt(idx));
+            for (++idx; node != null && node.getKeyAt(idx) < key2;) {
+                ret.add(node.getKeyAt(idx));
 
                 if (++idx >= node.n()) {
                     idx = 0;
@@ -64,7 +64,7 @@ class BTreeSearchOperations {
 
             // == key2
             if (inclusive && key2 == node.getKeyAt(idx)) {
-                ret.add(node.getSubItemAt(idx));
+                ret.add(node.getKeyAt(idx));
             }
         }
 
@@ -98,7 +98,7 @@ class BTreeSearchOperations {
         }
 
         if (node.isLeaf()) {
-            if (exact && key < node.getKeyAt(0)) {
+            if (exact && key != node.getKeyAt(i)) {
                 return null;
             } else if (i < node.n()) {
                 if (exact && key != node.getKeyAt(i)) {
