@@ -62,13 +62,16 @@ class BTreeInsertOperations2 {
         BTreeNode l = x.getSubItemAt(index);
         BTreeNode r = l.getEmptyClone();
         {
-            //  - (l.isLeaf() ? 0 : 1)
-            Collection l_rightHalfKeys = l.getKeys(l.t(), l.keysSize());  // deep clone
+            int count_keys = ((int)Math.ceil(l.keysSize() / 2.0));
+            Collection l_rightHalfKeys = l.getKeys(l.keysSize() - count_keys, l.keysSize());
             r.addKeys(l_rightHalfKeys);
             l.removeKeys(l_rightHalfKeys);
         }
         {
-            Collection l_rightHalfSubValues = l.getSubItems(l.t() + (l.isLeaf() ? 0 : 1), l.subItemsSize());  // deep clone
+            int count_subItems = r.keysSize();
+            if (!r.isLeaf())
+                count_subItems++;
+            Collection l_rightHalfSubValues = l.getSubItems(l.subItemsSize() - count_subItems, l.subItemsSize());
             r.addSubItemValues(l_rightHalfSubValues);
             l.removeSubItemsValues(l_rightHalfSubValues);
         }
@@ -77,6 +80,7 @@ class BTreeInsertOperations2 {
         if (r.isLeaf()) {
             ((BTreeLeafNode) l).setNextLeaf((BTreeLeafNode) r);
         } else {
+            assert r.keysSize() > 1;
             r.removeKeyAt(0);
         }
     }

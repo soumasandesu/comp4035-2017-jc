@@ -1,0 +1,145 @@
+{
+  "valueType": "java.lang.String",
+  "properties": {
+    "degree": 2
+  },
+  "rootNode": {
+    "leaf": false,
+    "keys": [
+      84
+    ],
+    "subItems": [
+      {
+        "leaf": false,
+        "keys": [
+          31,
+          61
+        ],
+        "subItems": [
+          {
+            "leaf": false,
+            "keys": [
+              12,
+              22,
+              24
+            ],
+            "subItems": [
+              {
+                "leaf": true,
+                "keys": [
+                  5,
+                  7
+                ],
+                "subItems": [
+                  null,
+                  null
+                ]
+              },
+              {
+                "leaf": true,
+                "keys": [
+                  12,
+                  16,
+                  17
+                ],
+                "subItems": [
+                  null,
+                  null,
+                  null
+                ]
+              },
+              {
+                "leaf": true,
+                "keys": [
+                  22
+                ],
+                "subItems": [
+                  null
+                ]
+              },
+              {
+                "leaf": true,
+                "keys": [
+                  24
+                ],
+                "subItems": [
+                  null
+                ]
+              }
+            ]
+          },
+          {
+            "leaf": false,
+            "keys": [],
+            "subItems": [
+              {
+                "leaf": true,
+                "keys": [
+                  31,
+                  49
+                ],
+                "subItems": [
+                  null,
+                  null
+                ]
+              }
+            ]
+          },
+          {
+            "leaf": false,
+            "keys": [
+              80
+            ],
+            "subItems": [
+              {
+                "leaf": true,
+                "keys": [
+                  61,
+                  73,
+                  76
+                ],
+                "subItems": [
+                  null,
+                  null,
+                  null
+                ]
+              },
+              {
+                "leaf": true,
+                "keys": [
+                  80
+                ],
+                "subItems": [
+                  null
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "leaf": false,
+        "keys": [],
+        "subItems": [
+          {
+            "leaf": false,
+            "keys": [],
+            "subItems": [
+              {
+                "leaf": true,
+                "keys": [
+                  84,
+                  96
+                ],
+                "subItems": [
+                  null,
+                  null
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

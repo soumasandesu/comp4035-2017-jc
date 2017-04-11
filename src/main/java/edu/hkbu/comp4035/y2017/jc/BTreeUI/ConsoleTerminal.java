@@ -1,7 +1,6 @@
 package edu.hkbu.comp4035.y2017.jc.BTreeUI;
 
 import edu.hkbu.comp4035.y2017.jc.BTree;
-import edu.hkbu.comp4035.y2017.jc.BTreePrinter;
 import edu.hkbu.comp4035.y2017.jc.BTreeProperties;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -88,7 +87,7 @@ class ConsoleTerminal {
 
                 int key1;
                 int key2;
-                int num;
+                int key3;
                 // why not just parse commands by argparse :o) -- charles
                 // and why not generalise -- switch-case is bad idea
                 switch (cmd) {
@@ -108,19 +107,35 @@ class ConsoleTerminal {
                         System.out.println("OK");
                         break;
                         */
-                	case "insert":
-                		 if (st.countTokens() < 3) {
-                             System.out.println("Syntax: 'insert <low> <high> <num>'");
-                             break;
-                         }
-                		key1 = Integer.parseInt(st.nextToken());
-                		key2 = Integer.parseInt(st.nextToken());
-                		num = Integer.parseInt(st.nextToken());
-                		java.util.Random ran = new java.util.Random();
-                		for(int i = 0;i<num;i++){
-                			bTree.insert(ran.nextInt(key2-key1+1)+key1, null);
-                		}
-                		break;
+                    case "insert":
+                        if (st.countTokens() < 1) {
+                            System.out.println("Syntax: 'insert <low> <high> <num>'");
+                            break;
+                        }
+                            boolean insertRand = false;
+                        try {
+                            key1 = Integer.parseInt(st.nextToken());
+                            if (st.countTokens() > 2) {
+                                insertRand = true;
+                                key2 = Integer.parseInt(st.nextToken());
+                                key3 = Integer.parseInt(st.nextToken());
+                                java.util.Random ran = new java.util.Random();
+                                for (int i = 0; i < key3; i++) {
+                                    int nextRand = ran.nextInt(key2 - key1 + 1) + key1;
+                                    System.out.printf("Inserting %d = null... ", nextRand);
+                                    bTree.insert(nextRand, null);
+                                }
+                                System.out.println("OK");
+                            } else {
+                                System.out.printf("Inserting %d = null... ", key1);
+                                bTree.insert(key1, null);
+                                System.out.println("OK");
+                            }
+                        } catch (NumberFormatException ignored) {
+                            System.out.println("ERROR: key is not int");
+                            break;
+                        }
+                        break;
                     case "delete": // 'delete key1:int'
                         if (st.countTokens() < 2) {
                             System.out.println("Syntax: 'delete <low> <high>'");
@@ -133,8 +148,8 @@ class ConsoleTerminal {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
-                        System.out.printf("Deleteing [%d , %d]...", key1,key2);
-                        bTree.delete(key1,key2);
+                        System.out.printf("Deleteing [%d , %d]...", key1, key2);
+                        bTree.delete(key1, key2);
                         System.out.println("OK");
                         break;
                     case "search": // 'search keyLow:int [keyUp:int]'
@@ -266,16 +281,19 @@ class ConsoleTerminal {
                             break;
                         }
                         switch (st.nextToken()) {
+                            case "stop":
                             case "break":
                                 System.out.println("Breaking on debugger side...");
                                 break;
                             default:
                                 System.out.println("???");
+                                break;
                         }
                     case "exit":
                     case "quit": // 'quit'
                         System.out.println("Thanks! Bye-bye ｽﾞｲ₍₍(ง˘ω˘)ว⁾⁾ｽﾞｲ ");
                         System.exit(0);
+                        break;
                     case "help":
                         String msg = "Syntax: \n";
                         msg += "    insert key:int value:*\n";
@@ -291,6 +309,9 @@ class ConsoleTerminal {
                         msg += "    quit\n";
                         msg += "    help\n";
                         System.out.println(msg);
+                        break;
+                    default:
+                        System.out.println("???");
                 }
             }
         }
