@@ -323,6 +323,15 @@ abstract class BTreeNode<S> implements Serializable {
     }
 
     /**
+     * Shows whether the keys are over-capacity.
+     * @return If keys are over-capacity.
+     */
+    final boolean isKeysOvercap() {
+        // max deg of keys = 2t - 1
+        return n() > 2 * t() - 1;
+    }
+
+    /**
      * Shows whether the keys are hungry.
      * @return If keys are hungry.
      */
@@ -345,6 +354,12 @@ abstract class BTreeNode<S> implements Serializable {
     abstract boolean isSubItemsFull();
 
     /**
+     * Shows whether the sub-items are over-capacity.
+     * @return If sub-items are over-capacity.
+     */
+    abstract boolean isSubItemsOvercap();
+
+    /**
      * Shows whether the sub-items are hungry.
      * @return If sub-items are hungry.
      */
@@ -358,16 +373,16 @@ abstract class BTreeNode<S> implements Serializable {
      * @return The result of validation.
      */
     boolean isValid() {
-        if (this.isKeysFull()) {
-            System.out.printf("%s: keys full", Integer.toHexString(hashCode()));
+        if (this.isKeysOvercap()) {
+            System.out.printf("%s: keys overcap", Integer.toHexString(hashCode()));
             return false;
         }
         if (this.isKeysHungry()) {
             System.out.printf("%s: keys hungry", Integer.toHexString(hashCode()));
             return false;
         }
-        if (this.isSubItemsFull()) {
-            System.out.printf("%s: subitems full", Integer.toHexString(hashCode()));
+        if (this.isSubItemsOvercap()) {
+            System.out.printf("%s: subitems overcap", Integer.toHexString(hashCode()));
             return false;
         }
         if (this.isSubItemsHungry()) {
@@ -378,7 +393,7 @@ abstract class BTreeNode<S> implements Serializable {
             System.out.printf("%s: key subitems size not ok", Integer.toHexString(hashCode()), this.keys.size());
             return false;
         }
-        if (this.keysSize() != this.subItemsSize() + (isLeaf() ? 0 : 1)) {
+        if (this.keysSize() != this.subItemsSize() - (isLeaf() ? 0 : 1)) {
             System.out.printf("%s: key subitems size not ok (%d, %d)", Integer.toHexString(hashCode()), this.keysSize(), this.subItemsSize());
             return false;
         }

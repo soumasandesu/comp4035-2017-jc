@@ -3,7 +3,7 @@ package edu.hkbu.comp4035.y2017.jc;
 import java.util.stream.Collectors;
 
 public class BTreeStatValidator {
-    static boolean doValidate(BTree bTree) {
+    public static boolean doValidate(BTree bTree) {
         return _validate(bTree.getRootNode());
     }
 

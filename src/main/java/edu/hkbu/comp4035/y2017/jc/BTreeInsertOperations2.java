@@ -52,6 +52,7 @@ class BTreeInsertOperations2 {
             if (xc.isSubItemsFull()) {
                 splitChild((BTreeIndexNode) x, i);
                 insertNonRoot(x, k, v); // re-calculate for choosing correct side
+                balance((BTreeIndexNode) x, i);
             } else {
                 insertNonRoot(xc, k, v);
             }
@@ -69,8 +70,6 @@ class BTreeInsertOperations2 {
         }
         {
             int count_subItems = r.keysSize();
-            if (!r.isLeaf())
-                count_subItems++;
             Collection l_rightHalfSubValues = l.getSubItems(l.subItemsSize() - count_subItems, l.subItemsSize());
             r.addSubItemValues(l_rightHalfSubValues);
             l.removeSubItemsValues(l_rightHalfSubValues);
@@ -82,6 +81,56 @@ class BTreeInsertOperations2 {
         } else {
             assert r.keysSize() > 1;
             r.removeKeyAt(0);
+        }
+    }
+
+    private static void balance(BTreeIndexNode parent, int index) {
+        BTreeNode l = parent.getSubItemAt(index);
+        BTreeNode r = parent.getSubItemAt(index + 1);
+
+        int diff = l.keysSize() - r.keysSize();
+        if (diff < -1) {
+            int rm_r = Math.abs(diff) - 1;
+            Collection<Integer> keys = r.getKeys(0, rm_r);
+            Collection<BTreeNode> values = r.getSubItems(0, rm_r);
+            if (!r.isLeaf()) {
+                int pK = parent.getKeyAt(index);
+                l.addKeyAt(l.keysSize(), pK);
+                parent.removeKeyAt(index);
+            }
+            l.addKeys(keys);
+            r.removeKeys(keys);
+            l.addSubItemValues(values);
+            r.removeSubItemsValues(values);
+            if (!l.isLeaf()) {
+                int npk = l.getKeyAt(l.keysSize() - 1);
+                parent.addKeyAt(index, npk);
+                l.removeKeyAt(l.keysSize() - 1);
+            } else {
+                parent.removeKeyAt(index);
+                parent.addKeyAt(index, r.getKeyAt(0));
+            }
+        } else if (diff > 1) {
+            int rm_l = Math.abs(diff) - 1;
+            Collection<Integer> keys = l.getKeys(l.keysSize() - rm_l, l.keysSize());
+            Collection<BTreeNode> values = l.getSubItems(l.keysSize() - rm_l, l.keysSize());
+            if (!r.isLeaf()) {
+                int pK = parent.getKeyAt(index);
+                r.addKeyAt(0, pK);
+                parent.removeKeyAt(index);
+            }
+            keys.forEach(k -> r.addKeyAt(0, k));
+            l.removeKeys(keys);
+            values.forEach(v -> r.addSubItemValueAt(0, v));
+            l.removeSubItemsValues(values);
+            if (!r.isLeaf()) {
+                int npk = r.getKeyAt(0);
+                parent.addKeyAt(parent.keysSize(), npk);
+                r.removeKeyAt(0);
+            } else {
+                parent.removeKeyAt(index);
+                parent.addKeyAt(index, l.getKeyAt(l.keysSize() - 1));
+            }
         }
     }
 }

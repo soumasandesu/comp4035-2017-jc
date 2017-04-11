@@ -47,6 +47,11 @@ public final class BTreeLeafNode<V> extends BTreeNode<V> {
     }
 
     @Override
+    boolean isSubItemsOvercap() {
+        return this.subItems.size() > 2 * t() - 1;
+    }
+
+    @Override
     final boolean isSubItemsHungry() {
         return isSubItemsHungry(0);
     }

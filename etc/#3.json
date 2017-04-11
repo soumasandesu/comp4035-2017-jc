@@ -1,0 +1,106 @@
+{
+  "valueType": "java.lang.String",
+  "properties": {
+    "degree": 3
+  },
+  "rootNode": {
+    "leaf": false,
+    "keys": [
+      7,
+      17,
+      29,
+      44,
+      70
+    ],
+    "subItems": [
+      {
+        "leaf": true,
+        "keys": [
+          1,
+          2
+        ],
+        "subItems": [
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          7,
+          9
+        ],
+        "subItems": [
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          17,
+          22,
+          24,
+          25
+        ],
+        "subItems": [
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          29,
+          34,
+          37,
+          38,
+          38
+        ],
+        "subItems": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          44,
+          45,
+          58,
+          63,
+          65
+        ],
+        "subItems": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "leaf": true,
+        "keys": [
+          70,
+          75,
+          76,
+          89,
+          91
+        ],
+        "subItems": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    ]
+  }
+}

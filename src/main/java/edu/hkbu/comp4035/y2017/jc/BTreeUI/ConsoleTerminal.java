@@ -2,6 +2,7 @@ package edu.hkbu.comp4035.y2017.jc.BTreeUI;
 
 import edu.hkbu.comp4035.y2017.jc.BTree;
 import edu.hkbu.comp4035.y2017.jc.BTreeProperties;
+import edu.hkbu.comp4035.y2017.jc.BTreeStatValidator;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -281,6 +282,10 @@ class ConsoleTerminal {
                             break;
                         }
                         switch (st.nextToken()) {
+                            case "validate":
+                                System.out.printf("... ");
+                                System.out.printf("\n%s\n", BTreeStatValidator.doValidate(bTree) ? "healthy" : "cancer");
+                                break;
                             case "stop":
                             case "break":
                                 System.out.println("Breaking on debugger side...");
@@ -289,6 +294,7 @@ class ConsoleTerminal {
                                 System.out.println("???");
                                 break;
                         }
+                        break;
                     case "exit":
                     case "quit": // 'quit'
                         System.out.println("Thanks! Bye-bye ｽﾞｲ₍₍(ง˘ω˘)ว⁾⁾ｽﾞｲ ");
