@@ -137,21 +137,12 @@ public class BTree<VType> implements Serializable {
      * not found, it returns nothing. <i><b>Be careful with the duplicate keys that span over multiple pages.</b></i>
      * @param key1 The first key which may identify a data reference.
      * @param key2 The second key which may identify another data reference.
-     * @return The collection of {@code BTreeNode}s which are within range between {@code key1} and {@code key2}
+     * @return The collection of {@code Integers}s of keys which are within range between {@code key1} and {@code key2}
      * <u>inclusively</u>.
      */
-    public Collection<VType> search(int key1, int key2) {
-        if (key1 > key2) {
-            // trick
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                System.out.println("key1 > key2! Flipped but be careful.");
-                // you cannot `new` an `Throwable` and do print stack trace --
-                // only quote with `try` may enable JVM to get this tracked
-                e.printStackTrace();
-            }
-
+    public Collection<Integer> search(int key1, int key2) {
+        if (key2 < key1) {
+            System.out.println("key1 > key2! Flipped but be careful.");
             int i = key2;
             key2 = key1;
             key1 = i;

@@ -10,8 +10,10 @@ import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 class ConsoleTerminal {
 
@@ -144,14 +146,17 @@ class ConsoleTerminal {
                             key2 = key1;
                         }
 
-                        if (key2 > key1) {
+                        if (key2 < key1) {
                             int i = key1;
                             key1 = key2;
                             key2 = i;
                         }
 
-                        System.out.printf("Searching keys between %d <-> %d...\n", key1, key2);
-                        bTree.search(key1, key2);
+                        System.out.printf("Searching keys between %d -> %d...\n", key1, key2);
+                        //noinspection unchecked,ConstantConditions
+                        Collection<Integer> search = bTree.search(key1, key2);
+                        String strKeys = search.stream().map(Object::toString).collect(Collectors.joining(", "));
+                        System.out.printf("[%s]\n", strKeys);
                         break;
                     case "print": // 'print [node keyContaining:int]'
                         if (st.countTokens() >= 2 && st.nextToken().equals("node")) {

@@ -5,6 +5,7 @@ import com.google.gson.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 // Note: Classes and methods (if not static) are **final** to make sure that they won't be extended or being overriden.
@@ -81,7 +82,8 @@ final class BTreeDumpJsonFormat {
 
         private static void reboundLeafNodes(BTree bTree) {
             Queue<BTreeNode> iterating = new LinkedList<>();
-            Queue<BTreeLeafNode> leafNodes = new LinkedList<>();
+            iterating.add(bTree.getRootNode());
+            Stack<BTreeLeafNode> leafNodes = new Stack<>();
             while (iterating.size() > 0) {
                 BTreeNode node = iterating.remove();
                 if (node.isLeaf()) {
@@ -92,11 +94,14 @@ final class BTreeDumpJsonFormat {
             }
 
             BTreeLeafNode reverseLastNode = null; // i.e. next node
-            for (BTreeLeafNode l : leafNodes) {
+            BTreeLeafNode l;
+            for (l = leafNodes.pop(); !leafNodes.empty(); l = leafNodes.pop()) {
                 //noinspection unchecked
                 l.setNextLeaf(reverseLastNode);
                 reverseLastNode = l;
             }
+            //noinspection unchecked
+            l.setNextLeaf(reverseLastNode);
         }
     }
 
