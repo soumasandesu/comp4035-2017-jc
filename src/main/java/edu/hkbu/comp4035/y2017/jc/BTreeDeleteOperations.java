@@ -1,5 +1,7 @@
 package edu.hkbu.comp4035.y2017.jc;
 
+import java.util.Collection;
+
 class BTreeDeleteOperations {
     /*
 
@@ -27,7 +29,13 @@ class BTreeDeleteOperations {
 
     // Jacky, you may change all those names and signatures of all following methods.
     // I'm just plotting the determination of this class for your reference, according to the textbook. -- Charles
-
+	static void doDelete(BTree bTree, int key,int key2) {
+		Collection<Integer> result = BTreeSearchOperations.doRangeSearchInclusive(bTree,key, key2);
+		for(int k:result){
+			delete(bTree.getRootNode(),k);
+		}
+	}
+	
     static void doDelete(BTree bTree, int key) {
         // search position
         // get parent-1

@@ -122,18 +122,19 @@ class ConsoleTerminal {
                 		}
                 		break;
                     case "delete": // 'delete key1:int'
-                        if (st.countTokens() < 1) {
-                            System.out.println("Syntax: 'delete key:int'");
+                        if (st.countTokens() < 2) {
+                            System.out.println("Syntax: 'delete <low> <high>'");
                             break;
                         }
                         try {
                             key1 = Integer.parseInt(st.nextToken());
+                            key2 = Integer.parseInt(st.nextToken());
                         } catch (NumberFormatException ignored) {
                             System.out.println("ERROR: key is not int");
                             break;
                         }
-                        System.out.printf("Inserting %d...", key1);
-                        bTree.delete(key1);
+                        System.out.printf("Deleteing %d...", key1);
+                        bTree.delete(key1,key2);
                         System.out.println("OK");
                         break;
                     case "search": // 'search keyLow:int [keyUp:int]'

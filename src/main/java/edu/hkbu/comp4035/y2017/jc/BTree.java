@@ -129,6 +129,11 @@ public class BTree<VType> implements Serializable {
         
         return this; // chain operation like jQuery
     }
+    public BTree delete(int key,int key2) {
+ 	   BTreeDeleteOperations.doDelete(this, key,key2);
+     
+     return this; // chain operation like jQuery
+ }
 
 
     /**
