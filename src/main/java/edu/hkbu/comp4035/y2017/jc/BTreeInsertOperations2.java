@@ -107,8 +107,8 @@ class BTreeInsertOperations2 {
                 parent.addKeyAt(index, npk);
                 l.removeKeyAt(l.keysSize() - 1);
             } else {
+                parent.addKeyAt(index + 1, r.getKeyAt(0));
                 parent.removeKeyAt(index);
-                parent.addKeyAt(index, r.getKeyAt(0));
             }
         } else if (diff > 1) {
             int rm_l = Math.abs(diff) - 1;
@@ -128,8 +128,8 @@ class BTreeInsertOperations2 {
                 parent.addKeyAt(parent.keysSize(), npk);
                 r.removeKeyAt(0);
             } else {
+                parent.addKeyAt(index + 1, l.getKeyAt(l.keysSize() - 1));
                 parent.removeKeyAt(index);
-                parent.addKeyAt(index, l.getKeyAt(l.keysSize() - 1));
             }
         }
     }
